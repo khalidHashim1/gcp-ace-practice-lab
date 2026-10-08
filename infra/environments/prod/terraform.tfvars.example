@@ -1,0 +1,9 @@
+project_id = "YOUR_DEDICATED_PROJECT"
+github_repository = "YOUR_OWNER/gcp-ace-practice-lab"
+github_owner_id = "NUMERIC_OWNER_ID"
+github_repository_id = "NUMERIC_REPOSITORY_ID"
+region = "me-central1"
+firestore_location = "me-central1"
+# Bootstrap first with service disabled, then supply built image and Firebase config.
+enable_service = false
+public_access = false
