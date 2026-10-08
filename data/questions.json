@@ -1,0 +1,2351 @@
+[
+  {
+    "id": "ace-001",
+    "number": 1,
+    "prompt": "You have production and test workloads that you want to deploy on Compute Engine. Production VMs need to be in a different subnet than the test VMs. All the VMs must be able to reach each other over Internal IP without creating additional routes. You need to set up VPC and the 2 subnets. Which configuration meets these requirements?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a single custom VPC with 2 subnets. Create each subnet in a different region and with a different CIDR range."
+      },
+      {
+        "id": "B",
+        "text": "Create a single custom VPC with 2 subnets. Create each subnet in the same region and with the same CIDR range."
+      },
+      {
+        "id": "C",
+        "text": "Create 2 custom VPCs, each with a single subnet. Create each subnet in a different region and with a different CIDR range."
+      },
+      {
+        "id": "D",
+        "text": "Create 2 custom VPCs, each with a single subnet. Create each subnet in the same region and with the same CIDR range."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Networking",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-002",
+    "number": 2,
+    "prompt": "You are running multiple VPC-native Google Kubernetes Engine clusters in the same subnet. The IPs available for the nodes are exhausted, and you want to ensure that the clusters can grow in nodes when needed. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a new subnet in the same region as the subnet being used."
+      },
+      {
+        "id": "B",
+        "text": "Add an alias IP range to the subnet used by the GKE clusters."
+      },
+      {
+        "id": "C",
+        "text": "Create a new VPC, and set up VPC peering with the existing VPC."
+      },
+      {
+        "id": "D",
+        "text": "Expand the CIDR range of the relevant subnet for the cluster."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Networking",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-003",
+    "number": 3,
+    "prompt": "You are building a multi-player gaming application that will store game information in a database. As the popularity of the application increases, you are concerned about delivering consistent performance. You need to ensure optimal gaming performance for global users, without increasing the management complexity. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use Cloud SQL database with cross-region replication to store game statistics in the EU, US, and APAC regions."
+      },
+      {
+        "id": "B",
+        "text": "Use Cloud Spanner to store user data mapped to the game statistics."
+      },
+      {
+        "id": "C",
+        "text": "Use BigQuery to store game statistics with a Redis on Memorystore instance in the front to provide global consistency."
+      },
+      {
+        "id": "D",
+        "text": "Store game statistics in a Bigtable database partitioned by username."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-004",
+    "number": 4,
+    "prompt": "You have an application that runs on Compute Engine VM instances in a custom Virtual Private Cloud (VPC). Your company's security policies only allow the use of internal IP addresses on VM instances and do not let VM instances connect to the internet. You need to ensure that the application can access a file hosted in a Cloud Storage bucket within your project. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Enable Private Service Access on the Cloud Storage Bucket."
+      },
+      {
+        "id": "B",
+        "text": "Add storage.googleapis.com to the list of restricted services in a VPC Service Controls perimeter and add your project to the list of protected projects."
+      },
+      {
+        "id": "C",
+        "text": "Enable Private Google Access on the subnet within the custom VPC."
+      },
+      {
+        "id": "D",
+        "text": "Deploy a Cloud NAT instance and route the traffic to the dedicated IP address of the Cloud Storage bucket."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Networking",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-005",
+    "number": 5,
+    "prompt": "Your company completed the acquisition of a startup and is now merging the IT systems of both companies. The startup had a production Google Cloud project in their organization. You need to move this project into your organization and ensure that the project is billed to your organization. You want to accomplish this task with minimal effort. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use the projects.move method to move the project to your organization. Update the billing account of the project to that of your organization."
+      },
+      {
+        "id": "B",
+        "text": "Ensure that you have an Organization Administrator IAM role assigned to you in both organizations. Navigate to the Resource Manager in the startup's Google Cloud organization, and drag the project to your company's organization."
+      },
+      {
+        "id": "C",
+        "text": "Create a Private Catalog for the Google Cloud Marketplace, and upload the resources of the startup's production project to the Catalog. Share the Catalog with your organization, and deploy the resources in your company's project."
+      },
+      {
+        "id": "D",
+        "text": "Create an infrastructure-as-code template for all resources in the project by using Terraform, and deploy that template to a new project in your organization. Delete the project from the startup's Google Cloud organization."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-006",
+    "number": 6,
+    "prompt": "An external member of your team needs list access to compute images and disks in one of your projects. You want to follow Google-recommended practices when you grant the required permissions to this user. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a custom role, and add all the required compute.disks.list and compute.images.list permissions as includedPermissions. Grant the custom role to the user at the project level."
+      },
+      {
+        "id": "B",
+        "text": "Create a custom role based on the Compute Image User role. Add the compute.disks.list to the includedPermissions field. Grant the custom role to the user at the project level."
+      },
+      {
+        "id": "C",
+        "text": "Create a custom role based on the Compute Storage Admin role. Exclude unnecessary permissions from the custom role. Grant the custom role to the user at the project level."
+      },
+      {
+        "id": "D",
+        "text": "Grant the Compute Storage Admin role at the project level."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-007",
+    "number": 7,
+    "prompt": "Your company developed an application to deploy on Google Kubernetes Engine. Certain parts of the application are not fault-tolerant and are allowed to have downtime. Other parts of the application are critical and must always be available. You need to configure a Google Kubernetes Engine cluster while optimizing for cost. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a cluster with a single node-pool by using standard VMs. Label the fault-tolerant Deployments as spot_true."
+      },
+      {
+        "id": "B",
+        "text": "Create a cluster with a single node-pool by using Spot VMs. Label the critical Deployments as spot_false."
+      },
+      {
+        "id": "C",
+        "text": "Create a cluster with both a Spot VM node pool and a node pool by using standard VMs. Deploy the critical deployments on the Spot VM node pool and the fault-tolerant deployments on the node pool by using standard VMs."
+      },
+      {
+        "id": "D",
+        "text": "Create a cluster with both a Spot VM node pool and a node pool by using standard VMs. Deploy the critical deployments on the node pool by using standard VMs and the fault-tolerant deployments on the Spot VM node pool."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-008",
+    "number": 8,
+    "prompt": "You have two Google Cloud projects: project-a with VPC vpc-a (10.0.0.0/16) and project-b with VPC vpc-b (10.8.0.0/16). Your frontend application resides in vpc-a and the backend API services are deployed in vpc-b. You need to efficiently and cost-effectively enable communication between these Google Cloud projects. You also want to follow Google-recommended practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create an OpenVPN connection between vpc-a and vpc-b."
+      },
+      {
+        "id": "B",
+        "text": "Create VPC Network Peering between vpc-a and vpc-b."
+      },
+      {
+        "id": "C",
+        "text": "Configure a Cloud Router in vpc-a and another Cloud Router in vpc-b."
+      },
+      {
+        "id": "D",
+        "text": "Configure a Cloud Interconnect connection between vpc-a and vpc-b."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-009",
+    "number": 9,
+    "prompt": "You are a Google Cloud organization administrator. You need to configure organization policies and log sinks on Google Cloud projects that cannot be removed by project users to comply with your company's security policies. The security policies are different for each company department. Each company department has a user with the Project Owner role assigned to their projects. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use a standard naming convention for projects that includes the department name. Configure organization policies on the organization and log sinks on the projects."
+      },
+      {
+        "id": "B",
+        "text": "Use a standard naming convention for projects that includes the department name. Configure both organization policies and log sinks on the projects."
+      },
+      {
+        "id": "C",
+        "text": "Organize projects under folders for each department. Configure both organization policies and log sinks on the folders."
+      },
+      {
+        "id": "D",
+        "text": "Organize projects under folders for each department. Configure organization policies on the organization and log sinks on the folders."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-010",
+    "number": 10,
+    "prompt": "Your web application is hosted on Cloud Run and needs to query a Cloud SQL database. Every morning during a traffic spike, you notice API quota errors in Cloud SQL logs. The project has already reached the maximum API quota. You want to make a configuration change to mitigate the issue. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Modify the minimum number of Cloud Run instances."
+      },
+      {
+        "id": "B",
+        "text": "Use traffic splitting."
+      },
+      {
+        "id": "C",
+        "text": "Modify the maximum number of Cloud Run instances."
+      },
+      {
+        "id": "D",
+        "text": "Set a minimum concurrent requests environment variable for the application."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-011",
+    "number": 11,
+    "prompt": "You need to deploy a single stateless web application with a web interface and multiple endpoints. For security reasons, the web application must be reachable from an internal IP address from your company's private VPC and on-premises network. You also need to update the web application multiple times per day with minimal effort and want to manage a minimal amount of cloud infrastructure. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Deploy the web application on Google Kubernetes Engine standard edition with an internal ingress."
+      },
+      {
+        "id": "B",
+        "text": "Deploy the web application on Cloud Run with Private Google Access configured."
+      },
+      {
+        "id": "C",
+        "text": "Deploy the web application on Cloud Run with Private Service Connect configured."
+      },
+      {
+        "id": "D",
+        "text": "Deploy the web application to GKE Autopilot with Private Google Access configured."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Networking",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-012",
+    "number": 12,
+    "prompt": "You have a VM instance running in a VPC with single-stack subnets. You need to ensure that the VM instance has a fixed IP address so that other services hosted in the same VPC can communicate with the VM. You want to follow Google-recommended practices while minimizing cost. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Promote the existing IP address of the VM to become a static external IP address."
+      },
+      {
+        "id": "B",
+        "text": "Promote the existing IP address of the VM to become a static internal IP address."
+      },
+      {
+        "id": "C",
+        "text": "Reserve a new static external IPv6 address and assign the new IP address to the VM."
+      },
+      {
+        "id": "D",
+        "text": "Reserve a new static external IP address and assign the new IP address to the VM."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-013",
+    "number": 13,
+    "prompt": "You are developing an application that will be deployed on Google Cloud. The application will use a service account to retrieve data from BigQuery. Before you deploy your application, you want to test the permissions of this service account from your local machine to ensure there will be no authentication issues. You want to ensure that you use the most secure method while following Google-recommended practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Generate a service account key, and configure the gcloud CLI to use this key. Issue a relevant BigQuery request through the gcloud CLI to test the access."
+      },
+      {
+        "id": "B",
+        "text": "Grant the service account the BigQuery Administrator IAM role to ensure the service account has all required access."
+      },
+      {
+        "id": "C",
+        "text": "Configure the gcloud CLI to use service account impersonation. Issue a relevant BigQuery request through the gcloud CLI to test the access."
+      },
+      {
+        "id": "D",
+        "text": "Configure the gcloud CLI with Application Default Credentials using your user account. Issue a relevant BigQuery request through the gcloud CLI to test the access."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-014",
+    "number": 14,
+    "prompt": "Your organization is migrating to Google Cloud. You want only users with company-issued Google accounts to access your Google Cloud environment. You must ensure that users of the same department can only access resources within their own department. You want to minimize operational costs while following Google-recommended practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Assign users to the relevant Google Groups, and provide access to cloud resources through IAM roles. Periodically identify and remove non-company issued Google accounts."
+      },
+      {
+        "id": "B",
+        "text": "Assign users to the relevant Google Groups, and provide access to cloud resources through IAM roles. Use organization policies to block non-company issued emails."
+      },
+      {
+        "id": "C",
+        "text": "Create a folder for each department in Resource Manager. Grant the users of each department the Folder Admin role on the folder of their department."
+      },
+      {
+        "id": "D",
+        "text": "Create a folder for each department in Resource Manager. Grant all company users the Folder Admin role on the organization level."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-015",
+    "number": 15,
+    "prompt": "You are deploying an application to Cloud Run. Your application requires the use of an API that runs on Google Kubernetes Engine (GKE). You need to ensure that your Cloud Run service can privately reach the API on GKE, and you want to follow Google-recommended practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Deploy an ingress resource on the GKE cluster to expose the API to the internet. Use Cloud Armor to filter for IP addresses that can connect to the API. Configure the Cloud Run service to fetch its public IP address and update the Cloud Armor policy on startup."
+      },
+      {
+        "id": "B",
+        "text": "Create an ingress firewall rule on the VPC to allow connections from 0.0.0.0/0 on ports 80 and 443."
+      },
+      {
+        "id": "C",
+        "text": "Create an egress firewall rule on the VPC to allow connections to 0.0.0.0/0 on ports 80 and 443."
+      },
+      {
+        "id": "D",
+        "text": "Deploy an internal Application Load Balancer to expose the API on GKE to the VPC. Configure Cloud DNS with the IP address of the internal ALB. Deploy a Serverless VPC Access connector to allow the Cloud Run service to call the API through the FQDN on Cloud DNS."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Compute & Containers",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-016",
+    "number": 16,
+    "prompt": "You are the Organization Administrator for your company's Google Cloud resources. Your company has strict compliance rules that require you to be notified about any modifications to files and documents hosted on Cloud Storage. You must ensure that you receive notifications for all changes to files and documents in Cloud Storage while minimizing management overhead. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "View Cloud Audit logs for all Cloud Storage files in Logs Explorer. Filter by Admin Activity logs."
+      },
+      {
+        "id": "B",
+        "text": "Enable Cloud Storage object versioning on your bucket. Configure Pub/Sub notifications for your Cloud Storage buckets."
+      },
+      {
+        "id": "C",
+        "text": "Enable versioning on the Cloud Storage bucket. Set up a custom script that scans versions of Cloud Storage objects being modified and alert the admin by using the script."
+      },
+      {
+        "id": "D",
+        "text": "Configure Object change notifications on the Cloud Storage buckets. Send the events to Pub/Sub."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-017",
+    "number": 17,
+    "prompt": "Your company is modernizing its applications and refactoring them to containerized microservices. You need to deploy the infrastructure on Google Cloud so that teams can deploy their applications. The applications cannot be exposed publicly. You want to minimize management and operational overhead. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Provision a Google Kubernetes Engine (GKE) Autopilot cluster."
+      },
+      {
+        "id": "B",
+        "text": "Provision a fleet of Compute Engine instances and install Kubernetes."
+      },
+      {
+        "id": "C",
+        "text": "Provision a Standard regional Google Kubernetes Engine (GKE) cluster."
+      },
+      {
+        "id": "D",
+        "text": "Provision a Standard zonal Google Kubernetes Engine (GKE) cluster."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-018",
+    "number": 18,
+    "prompt": "You are deploying an application to Google Kubernetes Engine (GKE). The application needs to make API calls to a private Cloud Storage bucket. You need to configure your application Pods to authenticate to the Cloud Storage API, but your organization policy prevents the usage of service account keys. You want to follow Google-recommended practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create the GKE cluster with Workload Identity Federation. Configure the default node service account to access the bucket. Deploy the application into the cluster so the application can use the node service account permissions."
+      },
+      {
+        "id": "B",
+        "text": "Create the GKE cluster with Workload Identity Federation. Create a Google service account and a Kubernetes ServiceAccount, configure both to use Workload Identity Federation. Attach the Kubernetes ServiceAccount to the application Pods and configure the Google service account to access the bucket with IAM."
+      },
+      {
+        "id": "C",
+        "text": "Create the GKE cluster and deploy the application. Request a security exception to create a Google service account key. Set the constraints/iam.serviceAccountKeyExpiryHours organization policy to 24 hours."
+      },
+      {
+        "id": "D",
+        "text": "Create the GKE cluster and deploy the application. Request a security exception to create a Google service account key. Set the constraints/iam.serviceAccountKeyExpiryHours organization policy to 8 hours."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-019",
+    "number": 19,
+    "prompt": "Your company is migrating its workloads to Google Cloud due to an expiring data center contract. The on-premises environment and Google Cloud are not connected. You have decided to follow a lift-and-shift approach. Several old applications connect to each other through hard-coded internal IP addresses. You want to migrate these workloads quickly without modifying the application code. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Migrate your DNS server first. Configure Cloud DNS with a forwarding zone to your migrated DNS server. Then migrate all other workloads with ephemeral internal IP addresses."
+      },
+      {
+        "id": "B",
+        "text": "Create a VPC with non-overlapping CIDR ranges compared to your on-premises network. When migrating individual workloads, assign each workload a new static internal IP address."
+      },
+      {
+        "id": "C",
+        "text": "Create a VPC with the same CIDR ranges as your on-premises network. When migrating individual workloads, assign each workload the same static internal IP address."
+      },
+      {
+        "id": "D",
+        "text": "Migrate all workloads to a single VPC subnet. Configure Cloud NAT for the subnet and manually assign a static IP address to the Cloud NAT gateway."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Networking",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-020",
+    "number": 20,
+    "prompt": "Your company's developers use automation to provision Linux VMs in Compute Engine within a Google Cloud project to perform various tasks. You need to manage the Linux account lifecycle and access for these users. You want to follow Google-recommended practices to simplify access management while minimizing operational costs. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Enable OS Login for all VMs. Use IAM roles to grant user permissions."
+      },
+      {
+        "id": "B",
+        "text": "Require your developers to create public SSH keys. Write custom startup scripts to update user permissions."
+      },
+      {
+        "id": "C",
+        "text": "Require your developers to create public SSH keys. Make the owner of the public key the root user."
+      },
+      {
+        "id": "D",
+        "text": "Enable OS Login for all VMs. Write custom startup scripts to update user permissions."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-021",
+    "number": 21,
+    "prompt": "You are managing the security configuration of your company's Google Cloud organization. The Operations team needs specific permissions on both a GKE cluster and a Cloud SQL instance. Two predefined IAM roles exist that contain a subset of the permissions needed by the team. You need to configure the necessary IAM permissions for this team while following Google-recommended practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a custom IAM role that combines the permissions from the two relevant predefined roles."
+      },
+      {
+        "id": "B",
+        "text": "Grant the team the two predefined IAM roles."
+      },
+      {
+        "id": "C",
+        "text": "Create a custom IAM role that includes only the required permissions from the predefined roles."
+      },
+      {
+        "id": "D",
+        "text": "Grant the team the IAM roles of Kubernetes Engine Admin and Cloud SQL Admin."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-022",
+    "number": 22,
+    "prompt": "Your organization has decided to deploy all its compute workloads to Kubernetes on Google Cloud and two other cloud providers. You want to build an Infrastructure-as-code solution to automate the provisioning process for all cloud resources. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Build the solution by using Config Connector, and provision the resources."
+      },
+      {
+        "id": "B",
+        "text": "Build the solution by using Terraform, and provision the resources."
+      },
+      {
+        "id": "C",
+        "text": "Build the solution by using Python and the cloud SDKs from all providers to provision the resources."
+      },
+      {
+        "id": "D",
+        "text": "Build the solution by using YAML manifests, and provision the resources."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Compute & Containers",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-023",
+    "number": 23,
+    "prompt": "You are migrating your on-premises workload to Google Cloud. Your company requires access to a granular breakdown of its Google Cloud costs. You need to ensure that the Cloud Billing datasets are available in BigQuery so you can conduct a detailed analysis of costs. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Enable Cloud Billing data export to BigQuery when you create a Cloud Billing account."
+      },
+      {
+        "id": "B",
+        "text": "Enable Cloud Billing on the project, and link a Cloud Billing account. Then view the billing data table in the BigQuery dataset."
+      },
+      {
+        "id": "C",
+        "text": "Create a Cloud Billing account. Enable the BigQuery Data Transfer Service API to export pricing data."
+      },
+      {
+        "id": "D",
+        "text": "Enable the BigQuery API, and ensure that the BigQuery User IAM role is selected. Change the BigQuery dataset to select a data location."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-024",
+    "number": 24,
+    "prompt": "You are planning to move your company's website and an asynchronous background job to Google Cloud. Your website contains only static HTML content. The background job is started through an HTTP endpoint and generates monthly invoices. Your website needs to be available in multiple geographic locations and requires autoscaling. You want to have no costs when your workloads are not in use. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Move your website to Google Kubernetes Engine (GKE), and move your background job to Cloud Functions."
+      },
+      {
+        "id": "B",
+        "text": "Move both your website and background job to Compute Engine."
+      },
+      {
+        "id": "C",
+        "text": "Move both your website and background job to Cloud Run."
+      },
+      {
+        "id": "D",
+        "text": "Move your website to Google Kubernetes Engine (GKE), and move your background job to Compute Engine."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-025",
+    "number": 25,
+    "prompt": "You are planning to migrate your on-premises VMs to Google Cloud. All VMs in your production environment must communicate with each other through private IP addresses. You need to allow all VMs in your Google Cloud organization to accept connections on specific TCP ports. You want to follow Google-recommended practices and minimize operational costs. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create individual VPCs per Google Cloud project. Peer all the VPCs together. Apply organization policies on the organization level."
+      },
+      {
+        "id": "B",
+        "text": "Create individual VPCs for each Google Cloud project. Peer all the VPCs together. Apply hierarchical firewall policies on the organization level."
+      },
+      {
+        "id": "C",
+        "text": "Create a host VPC project with each production project as its service project. Apply organization policies on the organization level."
+      },
+      {
+        "id": "D",
+        "text": "Create a host VPC project with each production project as its service project. Apply hierarchical firewall policies on the organization level."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-026",
+    "number": 26,
+    "prompt": "You are managing an application deployed on Cloud Run. The development team has released a new version. You want to deploy and redirect traffic to this new version. To ensure traffic is served with no startup time, you want two idle instances available for incoming traffic before adjusting the traffic flow. You also want to minimize administrative overhead. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Ensure the checkbox 'Serve this revision immediately' is unchecked when deploying the new revision. Before changing the traffic rules, use a traffic simulation tool to send load to the new revision."
+      },
+      {
+        "id": "B",
+        "text": "Configure service autoscaling and set the minimum number of instances to 2."
+      },
+      {
+        "id": "C",
+        "text": "Configure revision autoscaling for the new revision and set the minimum number of instances to 2."
+      },
+      {
+        "id": "D",
+        "text": "Configure revision autoscaling for the existing revision and set the minimum number of instances to 2."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Compute & Containers",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-027",
+    "number": 27,
+    "prompt": "You are managing a stateful application deployed on Google Kubernetes Engine (GKE) that can only have one replica. You discovered that the application becomes unstable at peak times due to needing more CPU than configured. You want Kubernetes to allocate sufficient CPU resources during peak times, while ensuring cost efficiency during off-peak periods. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Enable node auto-provisioning on the GKE cluster."
+      },
+      {
+        "id": "B",
+        "text": "Configure a Vertical Pod Autoscaler on the Deployment."
+      },
+      {
+        "id": "C",
+        "text": "Configure a Horizontal Pod Autoscaler on the Deployment."
+      },
+      {
+        "id": "D",
+        "text": "Enable cluster autoscaling on the GKE cluster."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-028",
+    "number": 28,
+    "prompt": "Your company runs a variety of applications and workloads on Google Cloud, and you are responsible for managing cloud costs. You need to identify a solution that enables you to perform detailed cost analysis and visualize the cost data in multiple ways on the same dashboard. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use the cost breakdown report with the available filters from Cloud Billing to visualize the data."
+      },
+      {
+        "id": "B",
+        "text": "Enable the Cloud Billing export to BigQuery, and use Looker Studio to visualize the data."
+      },
+      {
+        "id": "C",
+        "text": "Run queries in Cloud Monitoring. Create dashboards to visualize the billing metrics."
+      },
+      {
+        "id": "D",
+        "text": "Enable Cloud Monitoring metrics export to BigQuery, and use Looker to visualize the data."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-029",
+    "number": 29,
+    "prompt": "You are implementing a company-wide standard to control SSH access for your Google Cloud projects. You want to simplify SSH access management to your Compute Engine instances while maintaining audit compliance and eliminating as many manual steps as possible. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Configure a service account to add SSH keys for all VMs."
+      },
+      {
+        "id": "B",
+        "text": "Configure metadata SSH keys to manage sudo access to instances."
+      },
+      {
+        "id": "C",
+        "text": "Enable OS Login by using an organization policy for each Google Cloud project."
+      },
+      {
+        "id": "D",
+        "text": "Enable OS Login with two-factor authentication for the domain."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Compute & Containers",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-030",
+    "number": 30,
+    "prompt": "Your company uses Pub/Sub for event-driven workloads. You have a subscription named email-updates attached to the new-orders topic. You need to fetch and acknowledge waiting messages from this subscription. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use the gcloud pubsub subscriptions seek email-updates command."
+      },
+      {
+        "id": "B",
+        "text": "Use the gcloud pubsub topics describe new-orders command."
+      },
+      {
+        "id": "C",
+        "text": "Use the gcloud pubsub subscriptions pull email-updates --auto-ack command."
+      },
+      {
+        "id": "D",
+        "text": "Use the gcloud pubsub topics list-subscriptions new-orders --filter='email-updates' command."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-031",
+    "number": 31,
+    "prompt": "Your company has an existing GCP organization with hundreds of projects and a billing account. Your company recently acquired another company that also has hundreds of projects and its own billing account. You would like to consolidate all GCP costs of both organizations onto a single invoice as of tomorrow. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Link the acquired company's projects to your company's billing account."
+      },
+      {
+        "id": "B",
+        "text": "Configure the acquired company's billing account and your company's billing account to export the billing data into the same BigQuery dataset."
+      },
+      {
+        "id": "C",
+        "text": "Migrate the acquired company's projects into your company's GCP organization. Link the migrated projects to your company's billing account."
+      },
+      {
+        "id": "D",
+        "text": "Create a new GCP organization and a new billing account. Migrate both companies' projects into the new organization and link to the new billing account."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-032",
+    "number": 32,
+    "prompt": "You have successfully created a development environment in a project for an application using Compute Engine and Cloud SQL. Now you need to create a production environment for this application. The security team has forbidden the existence of network routes between these 2 environments. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a new project, enable the Compute Engine and Cloud SQL APIs in that project, and replicate the setup you have created in the development environment."
+      },
+      {
+        "id": "B",
+        "text": "Create a new production subnet in the existing VPC and a new production Cloud SQL instance in your existing project, and deploy your application using those resources."
+      },
+      {
+        "id": "C",
+        "text": "Create a new project, modify your existing VPC to be a Shared VPC, share that VPC with your new project, and replicate the setup in that new project in the Shared VPC."
+      },
+      {
+        "id": "D",
+        "text": "Ask the security team to grant you the Project Editor role in an existing production project used by another division of your company. Replicate the setup in that project."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Networking",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-033",
+    "number": 33,
+    "prompt": "You need to reduce GCP service costs for a division of your company using the fewest possible steps. You need to turn off all configured services in an existing GCP project. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "1. Verify you are assigned the Project Owners IAM role for this project. 2. Locate the project in the GCP console, click Shut down and then enter the project ID."
+      },
+      {
+        "id": "B",
+        "text": "1. Verify you are assigned the Project Owners IAM role for this project. 2. Switch to the project in the GCP console, locate the resources and delete them."
+      },
+      {
+        "id": "C",
+        "text": "1. Verify you are assigned the Organizational Administrator IAM role for this project. 2. Locate the project in the GCP console, enter the project ID and then click Shut down."
+      },
+      {
+        "id": "D",
+        "text": "1. Verify you are assigned the Organizational Administrators IAM role for this project. 2. Switch to the project in the GCP console, locate the resources and delete them."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-034",
+    "number": 34,
+    "prompt": "You manage an App Engine Service that aggregates and visualizes data from BigQuery. The application is deployed with the default App Engine Service account. The data resides in a different project managed by another team. You do not have access to this project, but you want your application to be able to read data from the BigQuery dataset. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Ask the other team to grant your default App Engine Service account the role of BigQuery Job User."
+      },
+      {
+        "id": "B",
+        "text": "Ask the other team to grant your default App Engine Service account the role of BigQuery Data Viewer."
+      },
+      {
+        "id": "C",
+        "text": "In Cloud IAM of your project, ensure that the default App Engine service account has the role of BigQuery Data Viewer."
+      },
+      {
+        "id": "D",
+        "text": "In Cloud IAM of your project, grant a newly created service account from the other team the role of BigQuery Job User in your project."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-035",
+    "number": 35,
+    "prompt": "Your company uses a large number of Google Cloud services centralized in a single project. The DevOps team needs access to all of the production services in order to perform their job. You want to prevent Google Cloud product changes from broadening their permissions in the future and follow Google-recommended practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Grant all members of the DevOps team the role of Project Editor on the organization level."
+      },
+      {
+        "id": "B",
+        "text": "Grant all members of the DevOps team the role of Project Editor on the production project."
+      },
+      {
+        "id": "C",
+        "text": "Create a custom role that combines the required permissions. Grant the DevOps team the custom role on the production project."
+      },
+      {
+        "id": "D",
+        "text": "Create a custom role that combines the required permissions. Grant the DevOps team the custom role on the organization level."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-036",
+    "number": 36,
+    "prompt": "You are working for a hospital that stores its medical images in an on-premises data room. The hospital wants to use Cloud Storage for archival storage and needs an automated process to upload new medical images. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a Pub/Sub topic, and enable a Cloud Storage trigger for the Pub/Sub topic. Create an application that sends all medical images to the Pub/Sub topic."
+      },
+      {
+        "id": "B",
+        "text": "Deploy a Dataflow job from the batch template. Schedule the batch job on the desired interval."
+      },
+      {
+        "id": "C",
+        "text": "Create a script that uses the gsutil command line interface to synchronize the on-premises storage with Cloud Storage. Schedule the script as a cron job."
+      },
+      {
+        "id": "D",
+        "text": "In the Cloud Console, go to Cloud Storage. Upload the relevant images to the appropriate bucket."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-037",
+    "number": 37,
+    "prompt": "You need to configure optimal data storage for files stored in Cloud Storage for minimal cost. The files are used in a mission-critical analytics pipeline that is used continually. The users are in Boston, MA (United States). What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Configure regional storage for the region closest to the users. Configure a Nearline storage class."
+      },
+      {
+        "id": "B",
+        "text": "Configure regional storage for the region closest to the users. Configure a Standard storage class."
+      },
+      {
+        "id": "C",
+        "text": "Configure dual-regional storage for the dual region closest to the users. Configure a Nearline storage class."
+      },
+      {
+        "id": "D",
+        "text": "Configure dual-regional storage for the dual region closest to the users. Configure a Standard storage class."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-038",
+    "number": 38,
+    "prompt": "You have been asked to set up the billing configuration for a new Google Cloud customer. Your customer wants to group resources that share common IAM policies. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use labels to group resources that share common IAM policies."
+      },
+      {
+        "id": "B",
+        "text": "Use folders to group resources that share common IAM policies."
+      },
+      {
+        "id": "C",
+        "text": "Set up a proper billing account structure to group IAM policies."
+      },
+      {
+        "id": "D",
+        "text": "Set up a proper project naming structure to group IAM policies."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-039",
+    "number": 39,
+    "prompt": "All development teams in your organization are located in the United States. Each dev team has its own Google Cloud project. You want to restrict access so that each dev team can only create cloud resources in the United States. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a folder to contain all the dev projects. Create an organization policy to limit resources in US locations."
+      },
+      {
+        "id": "B",
+        "text": "Create an organization to contain all the dev projects. Create an IAM policy to limit the resources in US regions."
+      },
+      {
+        "id": "C",
+        "text": "Create an IAM policy to restrict the resources locations in the US. Apply the policy to all dev projects."
+      },
+      {
+        "id": "D",
+        "text": "Create an IAM policy to restrict the resources locations in all dev projects. Apply the policy to all dev roles."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-040",
+    "number": 40,
+    "prompt": "You are working for a startup that was officially registered as a business 6 months ago. As your customer base grows, your use of Google Cloud increases. You want to allow all engineers to create new projects without asking them for their credit card information. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a Billing account, associate a payment method with it, and provide all project creators with permission to associate that billing account with their projects."
+      },
+      {
+        "id": "B",
+        "text": "Grant all engineers permission to create their own billing accounts for each new project."
+      },
+      {
+        "id": "C",
+        "text": "Apply for monthly invoiced billing, and have a single invoice for the project paid by the finance team."
+      },
+      {
+        "id": "D",
+        "text": "Create a billing account, associate it with a monthly purchase order (PO), and send the PO to Google Cloud."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-041",
+    "number": 41,
+    "prompt": "Your company requires all developers to have the same permissions, regardless of the Google Cloud project they are working on. Your company's security policy also restricts developer permissions to Compute Engine, Cloud Functions, and Cloud SQL. You want to implement the security policy with minimal effort. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a custom role with Compute Engine, Cloud Functions, and Cloud SQL permissions in one project. Copy the role across all projects using gcloud iam roles copy. Assign the role to developers in those projects."
+      },
+      {
+        "id": "B",
+        "text": "Add all developers to a Google group. Assign the predefined role of Compute Admin to the Google group at the Google Cloud organization level."
+      },
+      {
+        "id": "C",
+        "text": "Add all developers to a Google group in Cloud Identity. Assign predefined roles for Compute Engine, Cloud Functions, and Cloud SQL permissions to the Google group for each project."
+      },
+      {
+        "id": "D",
+        "text": "Add all developers to a Google group in Cloud Identity. Create a custom role with Compute Engine, Cloud Functions, and Cloud SQL permissions at the organization level. Assign the custom role to the Google group."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-042",
+    "number": 42,
+    "prompt": "You recently received a new Google Cloud project with an attached billing account. You need to create instances, set firewalls, and store data in Cloud Storage. You want to follow Google-recommended practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use the gcloud CLI services enable cloudresourcemanager.googleapis.com command to enable all resources."
+      },
+      {
+        "id": "B",
+        "text": "Use the gcloud services enable compute.googleapis.com command to enable Compute Engine and the gcloud services enable storage-api.googleapis.com command to enable the Cloud Storage APIs."
+      },
+      {
+        "id": "C",
+        "text": "Open the Google Cloud console and enable all Google Cloud APIs from the API dashboard."
+      },
+      {
+        "id": "D",
+        "text": "Open the Google Cloud console and run gcloud init --project in a Cloud Shell."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-043",
+    "number": 43,
+    "prompt": "You are migrating a business critical application from your local data center into Google Cloud. As part of your high-availability strategy, you want to ensure that any data used by the application will be immediately available if a zonal failure occurs. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Store the application data on a zonal persistent disk. Create a snapshot schedule for the disk. If an outage occurs, create a new disk from the most recent snapshot and attach it to a new VM in another zone."
+      },
+      {
+        "id": "B",
+        "text": "Store the application data on a zonal persistent disk. If an outage occurs, create an instance in another zone with this disk attached."
+      },
+      {
+        "id": "C",
+        "text": "Store the application data on a regional persistent disk. Create a snapshot schedule for the disk. If an outage occurs, create a new disk from the most recent snapshot and attach it to a new VM in another zone."
+      },
+      {
+        "id": "D",
+        "text": "Store the application data on a regional persistent disk. If an outage occurs, create an instance in another zone with this disk attached."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-044",
+    "number": 44,
+    "prompt": "The DevOps group in your organization needs full control of Compute Engine resources in your development project. However, they should not have permission to create or update any other resources in the project. You want to follow Google's recommendations for setting permissions. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Grant the basic role roles/viewer and the predefined role roles/compute.admin to the DevOps group."
+      },
+      {
+        "id": "B",
+        "text": "Create an IAM policy and grant all compute.instanceAdmin.* permissions to the policy. Attach the policy to the DevOps group."
+      },
+      {
+        "id": "C",
+        "text": "Create a custom role at the folder level and grant all compute.instanceAdmin.* permissions to the role. Grant the custom role to the DevOps group."
+      },
+      {
+        "id": "D",
+        "text": "Grant the basic role roles/editor to the DevOps group."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-045",
+    "number": 45,
+    "prompt": "You have an on-premises data analytics set of binaries that processes data files in memory for about 45 minutes every midnight. The sizes of those data files range from 1 gigabyte to 16 gigabytes. You want to migrate this application to Google Cloud with minimal effort and cost. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a container for the set of binaries. Use Cloud Scheduler to start a Cloud Run job for the container."
+      },
+      {
+        "id": "B",
+        "text": "Create a container for the set of binaries. Deploy the container to Google Kubernetes Engine (GKE) and use the Kubernetes scheduler to start the application."
+      },
+      {
+        "id": "C",
+        "text": "Upload the code to Cloud Functions. Use Cloud Scheduler to start the application."
+      },
+      {
+        "id": "D",
+        "text": "Lift and shift to a VM on Compute Engine. Use an instance schedule to start and stop the instance."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-046",
+    "number": 46,
+    "prompt": "You used the gcloud container clusters command to create two GKE clusters: prod-cluster (standard) and dev-cluster (autopilot). When you run kubectl get nodes, you only see nodes from prod-cluster. Which commands should you run to check the node status for dev-cluster?",
+    "options": [
+      {
+        "id": "A",
+        "text": "gcloud container clusters get-credentials dev-cluster kubectl get nodes"
+      },
+      {
+        "id": "B",
+        "text": "gcloud container clusters update --generate-password dev-cluster kubectl get nodes"
+      },
+      {
+        "id": "C",
+        "text": "kubectl config set-context dev-cluster kubectl cluster-info"
+      },
+      {
+        "id": "D",
+        "text": "kubectl config set-credentials dev-cluster kubectl cluster-info"
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Compute & Containers",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-047",
+    "number": 47,
+    "prompt": "Your company wants to migrate their on-premises workloads to Google Cloud. The workloads consist of a Flask web application, a backend API, and a scheduled long-running background job for ETL and reporting. You need to keep operational costs low and migrate to serverless solutions. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Migrate the web application to App Engine and the backend API to Cloud Run. Use Cloud Tasks to run your background job on Compute Engine."
+      },
+      {
+        "id": "B",
+        "text": "Migrate the web application to App Engine and the backend API to Cloud Run. Use Cloud Tasks to run your background job on Cloud Run."
+      },
+      {
+        "id": "C",
+        "text": "Run the web application on a Cloud Storage bucket and the backend API on Cloud Run. Use Cloud Tasks to run your background job on Cloud Run."
+      },
+      {
+        "id": "D",
+        "text": "Run the web application on a Cloud Storage bucket and the backend API on Cloud Run. Use Cloud Tasks to run your background job on Compute Engine."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-048",
+    "number": 48,
+    "prompt": "Your application stores files on Cloud Storage using the Standard Storage class. The application only requires access to files created in the last 30 days. You want to automatically save costs on files that are no longer accessed by the application. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create an object lifecycle on the storage bucket to change the storage class to Archive Storage for objects with an age over 30 days."
+      },
+      {
+        "id": "B",
+        "text": "Create a cron job in Cloud Scheduler to call a Cloud Functions instance every day to delete files older than 30 days."
+      },
+      {
+        "id": "C",
+        "text": "Create a retention policy on the storage bucket of 30 days, and lock the bucket by using a retention policy lock."
+      },
+      {
+        "id": "D",
+        "text": "Enable object versioning on the storage bucket and add lifecycle rules to expire non-current versions after 30 days."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-049",
+    "number": 49,
+    "prompt": "You want to enable your development team to deploy new features to an existing Cloud Run service in production. To minimize the risk associated with a new revision, you want to reduce the number of customers who might be affected by an outage without introducing any development or operational costs. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Ask your customers to retry access to your service with exponential backoff to mitigate any potential problems after the new revision is deployed."
+      },
+      {
+        "id": "B",
+        "text": "Gradually roll out the new revision and split customer traffic between the revisions to allow rollback in case a problem occurs."
+      },
+      {
+        "id": "C",
+        "text": "Send all customer traffic to the new revision, and roll back to a previous revision if you witness any problems in production."
+      },
+      {
+        "id": "D",
+        "text": "Deploy your application to a second Cloud Run service, and ask your customers to use the second Cloud Run service."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-050",
+    "number": 50,
+    "prompt": "You are in charge of provisioning access for all Google Cloud users in your organization. Your company recently acquired a startup that has their own Google Cloud organization. You need to ensure that your Site Reliability Engineers (SREs) have the same project permissions in the startup company's organization as in your own organization. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "In the Google Cloud console for your organization, select Create role from selection, and choose destination as the startup company's organization."
+      },
+      {
+        "id": "B",
+        "text": "In the Google Cloud console for the startup company, select Create role from selection and choose source as the startup company's Google Cloud organization."
+      },
+      {
+        "id": "C",
+        "text": "Use the gcloud iam roles copy command, and provide the Organization ID of the startup company's Google Cloud Organization as the destination."
+      },
+      {
+        "id": "D",
+        "text": "Use the gcloud iam roles copy command, and provide the project IDs of all projects in the startup company's organization as the destination."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-051",
+    "number": 51,
+    "prompt": "The core business of your company is to rent out construction equipment at large scale. All equipment has been equipped with multiple sensors that send event information every few seconds. You expect high throughput – up to thousands of events per hour per device – and need to retrieve consistent data based on the time of the event. Storing and retrieving individual signals should be atomic. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create files in Cloud Storage as data comes in."
+      },
+      {
+        "id": "B",
+        "text": "Create a file in Filestore per device, and append new data to that file."
+      },
+      {
+        "id": "C",
+        "text": "Ingest the data into Cloud SQL. Use multiple read replicas to match the throughput."
+      },
+      {
+        "id": "D",
+        "text": "Ingest the data into Bigtable. Create a row key based on the event timestamp."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-052",
+    "number": 52,
+    "prompt": "You just installed the Google Cloud CLI on your new corporate laptop. You need to list the existing instances of your company on Google Cloud. What must you do before you run the gcloud compute instances list command? (Choose two.)",
+    "options": [
+      {
+        "id": "A",
+        "text": "Run gcloud auth login, enter your login credentials in the dialog window, and paste the received login token to gcloud CLI."
+      },
+      {
+        "id": "B",
+        "text": "Create a Google Cloud service account, and download the service account key. Place the key file in a folder on your machine where gcloud CLI can find it."
+      },
+      {
+        "id": "C",
+        "text": "Download your Cloud Identity user account key. Place the key file in a folder on your machine where gcloud CLI can find it."
+      },
+      {
+        "id": "D",
+        "text": "Run gcloud config set compute/zone $my_zone to set the default zone for gcloud CLI. E Run gcloud config set project $my_project to set the default project for gcloud CLI."
+      }
+    ],
+    "selectionCount": 2,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-053",
+    "number": 53,
+    "prompt": "You are planning to migrate your on-premises data to Google Cloud. The data includes: 200 TB of video files in SAN storage, data warehouse data stored on Amazon Redshift, and 20 GB of PNG files stored on an S3 bucket. You want to follow Google-recommended practices and avoid writing any code. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use gcloud storage for the video files, Dataflow for the data warehouse data, and Storage Transfer Service for the PNG files."
+      },
+      {
+        "id": "B",
+        "text": "Use Transfer Appliance for the videos, BigQuery Data Transfer Service for the data warehouse data, and Storage Transfer Service for the PNG files."
+      },
+      {
+        "id": "C",
+        "text": "Use Storage Transfer Service for the video files, BigQuery Data Transfer Service for the data warehouse data, and Storage Transfer Service for the PNG files."
+      },
+      {
+        "id": "D",
+        "text": "Use Cloud Data Fusion for the video files, Dataflow for the data warehouse data, and Storage Transfer Service for the PNG files."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-054",
+    "number": 54,
+    "prompt": "Your team is building a website that handles votes from a large user population. The incoming votes will arrive at various rates. You want to optimize the storage and processing of the votes. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Save the incoming votes to Firestore. Use Cloud Scheduler to trigger a Cloud Functions instance to periodically process the votes."
+      },
+      {
+        "id": "B",
+        "text": "Use a dedicated instance to process the incoming votes. Send the votes directly to this instance."
+      },
+      {
+        "id": "C",
+        "text": "Save the incoming votes to a JSON file on Cloud Storage. Process the votes in a batch at the end of the day."
+      },
+      {
+        "id": "D",
+        "text": "Save the incoming votes to Pub/Sub. Use the Pub/Sub topic to trigger a Cloud Functions instance to process the votes."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-055",
+    "number": 55,
+    "prompt": "You are deploying an application on Google Cloud that requires a relational database for storage. Your security policies require your application to connect to your database through an encrypted and authenticated connection that requires minimal management and integrates with IAM. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Deploy a Cloud SQL database with SSL mode set to encrypted only, configure SSL/TLS client certificates, and configure a database user and password."
+      },
+      {
+        "id": "B",
+        "text": "Deploy a Cloud SQL database with SSL mode set to encrypted only, configure SSL/TLS client certificates, and configure IAM database authentication."
+      },
+      {
+        "id": "C",
+        "text": "Deploy a Cloud SQL database and configure IAM database authentication. Access the database through the Cloud SQL Auth Proxy."
+      },
+      {
+        "id": "D",
+        "text": "Deploy a Cloud SQL database and configure a database user and password. Access the database through the Cloud SQL Auth Proxy."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-056",
+    "number": 56,
+    "prompt": "Your team has developed a stateless application which requires it to be run directly on virtual machines. The application is expected to receive a fluctuating amount of traffic and needs to scale automatically. You need to deploy the application. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Deploy the application on a managed instance group and configure autoscaling."
+      },
+      {
+        "id": "B",
+        "text": "Deploy the application on a Kubernetes Engine cluster and configure node pool autoscaling."
+      },
+      {
+        "id": "C",
+        "text": "Deploy the application on Cloud Functions and configure the maximum number of instances."
+      },
+      {
+        "id": "D",
+        "text": "Deploy the application on Cloud Run and configure autoscaling."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-057",
+    "number": 57,
+    "prompt": "Your company uses a multi-cloud strategy. You want to centralize application logs in a third-party SaaS tool from all environments, integrating logs from Cloud Logging with the least amount of delay possible. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a Cloud Logging sink and configure BigQuery as the destination. Configure the SaaS tool to query BigQuery to retrieve the logs."
+      },
+      {
+        "id": "B",
+        "text": "Create a Cloud Logging sink and configure Pub/Sub as the destination. Configure the SaaS tool to subscribe to the Pub/Sub topic to retrieve the logs."
+      },
+      {
+        "id": "C",
+        "text": "Create a Cloud Logging sink and configure Cloud Storage as the destination. Configure the SaaS tool to read the Cloud Storage bucket to retrieve the logs."
+      },
+      {
+        "id": "D",
+        "text": "Use a Cloud Scheduler cron job to trigger a Cloud Function that queries Cloud Logging and sends the logs to the SaaS tool."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-058",
+    "number": 58,
+    "prompt": "Your company would like to store invoices and other financial documents in Google Cloud for three years. Company analysts need frequent access to invoices from the past six months. After six months, invoices should be archived for audit purposes only. You want to minimize costs. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use Cloud Storage with Object Lifecycle Management to change the object storage class to Coldline after six months."
+      },
+      {
+        "id": "B",
+        "text": "Use Cloud Storage with Object Lifecycle Management to change the object storage class to Standard after six months."
+      },
+      {
+        "id": "C",
+        "text": "Store your documents on Filestore, and move the documents to Cloud Storage with object storage class set to Coldline after six months."
+      },
+      {
+        "id": "D",
+        "text": "Store your documents on Filestore, and move the documents to Cloud Storage with object storage class set to Standard after six months."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-059",
+    "number": 59,
+    "prompt": "You are planning to migrate your containerized workloads to Google Kubernetes Engine (GKE). Your solution must have high availability, minimal downtime, and the ability to promptly apply security updates to nodes. You also want to pay only for the compute resources your workloads use without managing nodes. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Configure a Standard regional GKE cluster."
+      },
+      {
+        "id": "B",
+        "text": "Configure a Standard zonal GKE cluster."
+      },
+      {
+        "id": "C",
+        "text": "Configure a Standard multi-zonal GKE cluster."
+      },
+      {
+        "id": "D",
+        "text": "Configure an Autopilot GKE cluster."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Compute & Containers",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-060",
+    "number": 60,
+    "prompt": "Your company stores data from multiple sources with different storage requirements: (1) customer data that is structured and read with complex queries, (2) historical log data that is large in volume and accessed infrequently, and (3) real-time sensor data with high-velocity writes that needs to be available for analysis but can tolerate some data loss. What is the most cost-effective storage solution?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use Firestore for customer data, Cloud Storage (Nearline) for historical logs, and Bigtable for sensor data."
+      },
+      {
+        "id": "B",
+        "text": "Use Cloud SQL for customer data, Cloud Storage (Coldline) for historical logs, and BigQuery for sensor data."
+      },
+      {
+        "id": "C",
+        "text": "Use Cloud SQL for customer data, Cloud Storage (Archive) for historical logs, and Bigtable for sensor data."
+      },
+      {
+        "id": "D",
+        "text": "Use Spanner for all data."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-061",
+    "number": 61,
+    "prompt": "You work for a financial services company planning to migrate to Google Cloud. Your design must minimize the latency between all production systems and minimize costs related to your development environment. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a VPC in the Standard Tier and one in the Premium Tier. Deploy production workloads in the Standard Tier and development workloads in the Premium Tier."
+      },
+      {
+        "id": "B",
+        "text": "Create a VPC in the Standard Tier and one in the Premium Tier. Deploy development workloads in the Standard Tier and production workloads in the Premium Tier."
+      },
+      {
+        "id": "C",
+        "text": "Create a VPC in the Premium Tier, and deploy both production and development workloads on this VPC."
+      },
+      {
+        "id": "D",
+        "text": "Create a VPC in the Standard Tier, and deploy both production and development workloads on this VPC."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-062",
+    "number": 62,
+    "prompt": "You are managing a fleet of Compute Engine Linux instances. Your engineering team requires SSH access to all instances for routine maintenance. You need to manage the SSH access and minimize operational overhead when engineers join or leave the team. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a single SSH key pair to be shared by all engineering team members. Add the public SSH key to project metadata."
+      },
+      {
+        "id": "B",
+        "text": "Create an SSH key pair for each engineer on the team, and add the public SSH key to the metadata of the relevant instances."
+      },
+      {
+        "id": "C",
+        "text": "Create a Google Group for all engineering team members, and grant them the Compute Viewer IAM role. Manage group membership when engineers join or leave."
+      },
+      {
+        "id": "D",
+        "text": "Create a Google Group for all engineering team members, and set up OS Login for this group on the project. Manage group membership when engineers join or leave."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Compute & Containers",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-063",
+    "number": 63,
+    "prompt": "Your company was recently impacted by a service disruption where multiple Dataflow jobs got stuck, resulting in significant downtime. You need to design a solution with minimal management effort to identify when jobs are stuck in the future. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Update the Dataflow job configurations to send messages to a Pub/Sub topic when there are delays. Configure a backup Dataflow job to process jobs that are delayed."
+      },
+      {
+        "id": "B",
+        "text": "Set up Cloud Monitoring alerts on the data freshness metric for the Dataflow jobs to receive a notification when a certain threshold is reached."
+      },
+      {
+        "id": "C",
+        "text": "Set up Error Reporting to identify stack traces that indicate slowdowns in Dataflow jobs. Set up alerts based on these log entries."
+      },
+      {
+        "id": "D",
+        "text": "Use the Personalized Service Health dashboard to identify issues with Dataflow jobs across regions."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-064",
+    "number": 64,
+    "prompt": "You have an application running inside a Compute Engine instance. You want to provide the application with secure access to a BigQuery dataset. You must ensure that credentials are only valid for a short period of time, and your application will only have access to the intended BigQuery dataset. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Attach a new service account to the instance every hour, and grant the service account the BigQuery Data Viewer IAM role on the project."
+      },
+      {
+        "id": "B",
+        "text": "Attach a custom service account to the instance, and grant the service account the BigQuery Data Viewer IAM role on the dataset."
+      },
+      {
+        "id": "C",
+        "text": "Attach a new service account to the instance every hour, and grant the service account the BigQuery Data Viewer IAM role on the dataset."
+      },
+      {
+        "id": "D",
+        "text": "Attach a custom service account to the instance, and grant the service account the BigQuery Data Viewer IAM role on the project."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-065",
+    "number": 65,
+    "prompt": "You have an application that is currently processing transactions using a group of managed VM instances. You need to migrate the application so that it is serverless and scalable. You want to implement an asynchronous transaction processing system, while minimizing management overhead. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Install Kafka on VM instances to acknowledge incoming transactions. Use Cloud Run to process transactions."
+      },
+      {
+        "id": "B",
+        "text": "Use Pub/Sub to acknowledge incoming transactions. Use VM instances to process transactions."
+      },
+      {
+        "id": "C",
+        "text": "Use Pub/Sub to acknowledge incoming transactions. Use Cloud Run to process transactions."
+      },
+      {
+        "id": "D",
+        "text": "Install Kafka on VM instances to acknowledge incoming transactions. Use VM instances to process transactions."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-066",
+    "number": 66,
+    "prompt": "Your company is seeking a scalable solution to retain and explore application logs hosted on Compute Engine. You must be able to analyze your logs with SQL queries, and you want to be able to create charts to identify patterns and trends over time. You want to follow Google-recommended practices and minimize operational costs. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use a custom script to push your application logs to BigQuery for exploration."
+      },
+      {
+        "id": "B",
+        "text": "Ingest your application logs to Cloud Logging by using Ops Agent, and explore your logs in Logs Explorer."
+      },
+      {
+        "id": "C",
+        "text": "Ingest your application logs to Cloud Logging by using Ops Agent, and explore your logs with Log Analytics."
+      },
+      {
+        "id": "D",
+        "text": "Use a custom script to push your application logs to Cloud SQL for exploration."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-067",
+    "number": 67,
+    "prompt": "You need to assign a Cloud IAM role to an external auditor. The auditor needs to have permissions to review your GCP Audit Logs and also to review your Data Access logs. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Assign the auditor the IAM role roles/logging.privateLogViewer. Perform the export of logs to Cloud Storage."
+      },
+      {
+        "id": "B",
+        "text": "Assign the auditor the IAM role roles/logging.privateLogViewer. Direct the auditor to also review the logs for changes to Cloud IAM policy."
+      },
+      {
+        "id": "C",
+        "text": "Assign the auditor's IAM user to a custom role that has logging.privateLogEntries.list permission. Perform the export of logs to Cloud Storage."
+      },
+      {
+        "id": "D",
+        "text": "Assign the auditor's IAM user to a custom role that has logging.privateLogEntries.list permission. Direct the auditor to also review the logs for changes to Cloud IAM policy."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-068",
+    "number": 68,
+    "prompt": "You are running a data warehouse on BigQuery. A partner company is offering a recommendation engine based on the data in your data warehouse. The partner company is also running their application on Google Cloud, and they need access to the BigQuery dataset in your project. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a Service Account in your own project, and grant this Service Account access to BigQuery in your project."
+      },
+      {
+        "id": "B",
+        "text": "Create a Service Account in your own project, and ask the partner to grant this Service Account access to BigQuery in their project."
+      },
+      {
+        "id": "C",
+        "text": "Ask the partner to create a Service Account in their project, and have them give the Service Account access to BigQuery in their project."
+      },
+      {
+        "id": "D",
+        "text": "Ask the partner to create a Service Account in their project, and grant their Service Account access to the BigQuery dataset in your project."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-069",
+    "number": 69,
+    "prompt": "You are building an application that stores relational data from users. Users across the globe will use this application. Your CTO is concerned about the scaling requirements because the size of the user base is unknown. You need to implement a database solution that can scale with your user growth with minimum configuration changes. Which storage solution should you use?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Cloud SQL"
+      },
+      {
+        "id": "B",
+        "text": "Cloud Spanner"
+      },
+      {
+        "id": "C",
+        "text": "Cloud Firestore"
+      },
+      {
+        "id": "D",
+        "text": "Cloud Datastore"
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-070",
+    "number": 70,
+    "prompt": "You are assigned to maintain a Google Kubernetes Engine (GKE) cluster named 'dev'. You want to manage the GKE configuration using the CLI and ensure that future CLI commands by default address this specific cluster. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use the command gcloud config set container/cluster dev."
+      },
+      {
+        "id": "B",
+        "text": "Use the command gcloud container clusters update dev."
+      },
+      {
+        "id": "C",
+        "text": "Create a file called gke.default in the ~/.gcloud folder that contains the cluster name."
+      },
+      {
+        "id": "D",
+        "text": "Create a file called defaults.json in the ~/.gcloud folder that contains the cluster name."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Compute & Containers",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-071",
+    "number": 71,
+    "prompt": "You are building a data lake on Google Cloud for your IoT application. The IoT application has millions of sensors that are constantly streaming structured and unstructured data to your backend. You want to build a highly available and resilient architecture based on Google-recommended practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Stream data to Pub/Sub, and use Dataflow to send data to Cloud Storage."
+      },
+      {
+        "id": "B",
+        "text": "Stream data to Pub/Sub, and use Storage Transfer Service to send data to BigQuery."
+      },
+      {
+        "id": "C",
+        "text": "Stream data to Dataflow, and use Dataprep by Trifacta to send data to Bigtable."
+      },
+      {
+        "id": "D",
+        "text": "Stream data to Dataflow, and use Storage Transfer Service to send data to BigQuery."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-072",
+    "number": 72,
+    "prompt": "You are developing an internet of things (IoT) application that captures sensor data from multiple devices. You need to identify the global data storage product to store this data. You must ensure that the storage solution meets your requirements of sub-millisecond latency. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Store the IoT data in Spanner. Use caches to speed up the process and avoid latencies."
+      },
+      {
+        "id": "B",
+        "text": "Store the IoT data in Bigtable."
+      },
+      {
+        "id": "C",
+        "text": "Capture IoT data in BigQuery datasets."
+      },
+      {
+        "id": "D",
+        "text": "Store the IoT data in Cloud Storage. Implement caching by using Cloud CDN."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-073",
+    "number": 73,
+    "prompt": "You need to create and manage service accounts for your workloads running on Google Cloud. You want to follow Google-recommended practices. What should you do? (Choose two.)",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create as few service accounts as possible."
+      },
+      {
+        "id": "B",
+        "text": "Delete any unused service accounts immediately."
+      },
+      {
+        "id": "C",
+        "text": "Create single-purpose service accounts."
+      },
+      {
+        "id": "D",
+        "text": "Manage service accounts as resources. E Use random names for the service accounts."
+      }
+    ],
+    "selectionCount": 2,
+    "topic": "IAM & Security",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-074",
+    "number": 74,
+    "prompt": "You need to migrate multiple PostgreSQL databases from your on-premises data center to Google Cloud. You want to significantly improve the performance of your databases while minimizing changes to your data schema and application code. You expect to exceed 150 TB of data per geographical region. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Migrate your data to AlloyDB."
+      },
+      {
+        "id": "B",
+        "text": "Migrate your data to Spanner."
+      },
+      {
+        "id": "C",
+        "text": "Migrate your data to Firebase."
+      },
+      {
+        "id": "D",
+        "text": "Migrate your data to Bigtable."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Storage & Databases",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-075",
+    "number": 75,
+    "prompt": "You are deploying an application to Google Kubernetes Engine (GKE) that needs to call an external third-party API. You need to provide the external API vendor with a list of IP addresses for their firewall allowlist. You want to follow Google-recommended practices and avoid any risk of interrupting traffic due to IP address changes. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Configure your GKE cluster with one node, and set the node to have a static external IP address. Ensure that the GKE cluster autoscaler is off. Send the external IP address of the node to the vendor."
+      },
+      {
+        "id": "B",
+        "text": "Configure your GKE cluster with private nodes. Configure a Cloud NAT instance with static IP addresses. Provide these IP addresses to the vendor."
+      },
+      {
+        "id": "C",
+        "text": "Configure your GKE cluster with private nodes. Configure a Cloud NAT instance with dynamic IP addresses. Provide these IP addresses to the vendor."
+      },
+      {
+        "id": "D",
+        "text": "Configure your GKE cluster with public nodes. Write a Cloud Function that pulls the public IP addresses of each node in the cluster. Trigger the function to run every day with Cloud Scheduler. Send the list to the vendor by email every day."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Networking",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-076",
+    "number": 76,
+    "prompt": "Your company wants to provide engineers with access to explore Google Cloud freely in a sandbox environment. The total budget for testing across your organization is $1,000. You need to ensure that engineers are notified when the budget is about to be reached. You want to automate your solution as much as possible. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create a separate Cloud Billing account for all sandbox projects. Link a credit card with a limit of $1,000 to this billing account. Ensure all sandbox projects are linked to this new Cloud Billing account."
+      },
+      {
+        "id": "B",
+        "text": "Create a Google Cloud Folder and ensure all sandbox projects are located under that Folder. Create a Budget Alert for $1,000 and scope it to the Folder. Configure an email alert to billing administrators and users once the budget is 90% reached."
+      },
+      {
+        "id": "C",
+        "text": "Create an email template reminding people to regularly check their Google Cloud spend. Create a Cloud Function that sends the email to all the project owners. Create a daily job in Cloud Scheduler that triggers the Cloud Function."
+      },
+      {
+        "id": "D",
+        "text": "Configure a billing data export to a BigQuery dataset on the Cloud Billing account. Create a dashboard for all costs related to the sandbox experiments. Share the dashboard with all engineers."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-077",
+    "number": 77,
+    "prompt": "You assist different engineering teams in deploying their infrastructure on Google Cloud. Your company has defined certain practices required for all workloads. You need to provide the engineering teams with a solution that enables teams to deploy their infrastructure independently without having to know all implementation details of the company's required practices. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Configure organization policies to enforce your company's required practices. Ask the teams to provision their infrastructure by using the Google Cloud console."
+      },
+      {
+        "id": "B",
+        "text": "Create a service account per team, and grant the service account the Project Editor role. Ask the teams to provision their infrastructure through the Google Cloud CLI, while impersonating their dedicated service account."
+      },
+      {
+        "id": "C",
+        "text": "Write Terraform modules for each component that are compliant with the company's required practices, and ask teams to implement their infrastructure through these modules."
+      },
+      {
+        "id": "D",
+        "text": "Provide training for all engineering teams to understand the company's required practices. Allow the engineering teams to provision the infrastructure to best meet their needs."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Operations & Monitoring",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-078",
+    "number": 78,
+    "prompt": "You are migrating your company's on-premises compute resources to Google Cloud. You need to deploy batch processing jobs that run every night. The jobs require significant CPU and memory for several hours but can tolerate interruptions. You must ensure that the deployment is cost-effective. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Use the M1 machine series on Compute Engine."
+      },
+      {
+        "id": "B",
+        "text": "Containerize the batch processing jobs and deploy them on Compute Engine."
+      },
+      {
+        "id": "C",
+        "text": "Use Spot VMs on Compute Engine."
+      },
+      {
+        "id": "D",
+        "text": "Use custom machine types on Compute Engine."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-079",
+    "number": 79,
+    "prompt": "Your company's accounting department needs to run an overnight batch workload every day. You must implement a solution that minimizes the cost to run this workload and automatically retries the batch if an execution fails. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Develop an application that runs the batch workload, and deploy the application as a Google Kubernetes Engine (GKE) CronJob."
+      },
+      {
+        "id": "B",
+        "text": "Develop a web application that listens for incoming requests, and deploy the application as a Cloud Run service. Use Cloud Scheduler to call the HTTP endpoint."
+      },
+      {
+        "id": "C",
+        "text": "Develop an application that runs the batch workload, and deploy the application as a Cloud Run job. Use Cloud Scheduler to trigger the job."
+      },
+      {
+        "id": "D",
+        "text": "Develop a web application that listens for incoming requests, and deploy the application as a GKE Deployment. Use Cloud Scheduler to call the HTTP endpoint."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Billing & Cost",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-080",
+    "number": 80,
+    "prompt": "You have two subnets (subnet-a and subnet-b) in the default VPC. Your database servers are running in subnet-a. Your application servers and web servers are running in subnet-b. You want to configure a firewall rule that only allows database traffic from the application servers to the database servers. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Create service accounts sa-app and sa-db. Associate sa-app with the application servers and sa-db with the database servers. Create an ingress firewall rule to allow network traffic from source service account sa-app to target service account sa-db."
+      },
+      {
+        "id": "B",
+        "text": "Create network tags app-server and db-server. Add the app-server tag to the application servers and the db-server tag to the database servers. Create an egress firewall rule to allow network traffic from source network tag app-server to target network tag db-server."
+      },
+      {
+        "id": "C",
+        "text": "Create a service account sa-app and a network tag db-server. Associate the service account sa-app with the application servers and the network tag db-server with the database servers. Create an ingress firewall rule to allow network traffic from source VPC IP addresses and target the subnet-a IP addresses."
+      },
+      {
+        "id": "D",
+        "text": "Create a network tag app-server and service account sa-db. Add the tag to the application servers and associate the service account with the database servers. Create an egress firewall rule to allow network traffic from source network tag app-server to target service account sa-db."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Networking",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  },
+  {
+    "id": "ace-081",
+    "number": 81,
+    "prompt": "You have deployed multiple Linux instances on Compute Engine. You plan on adding more instances in the coming weeks. You want to access all of these instances through your SSH client over the internet without configuring specific access on existing and new instances. You do not want the instances to have a public IP. What should you do?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Configure Cloud Identity-Aware Proxy for HTTPS resources."
+      },
+      {
+        "id": "B",
+        "text": "Configure Cloud Identity-Aware Proxy for SSH and TCP resources."
+      },
+      {
+        "id": "C",
+        "text": "Create an SSH keypair and store the public key as a project-wide SSH Key."
+      },
+      {
+        "id": "D",
+        "text": "Create an SSH keypair and store the private key as a project-wide SSH Key."
+      }
+    ],
+    "selectionCount": 1,
+    "topic": "Compute & Containers",
+    "verification": "ungraded",
+    "correctOptionIds": [],
+    "explanation": null,
+    "references": []
+  }
+]
