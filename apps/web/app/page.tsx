@@ -294,8 +294,10 @@ export default function Home() {
               <div className="banner">
                 <strong>Transparent grading.</strong>{" "}
                 {bank.filter((q) => q.verification === "verified").length}{" "}
-                verified answer keys. Questions without a verified key stay
-                ungraded; completion is tracked separately from score.
+                graded questions ·{" "}
+                {bank.filter((q) => q.verification === "ungraded").length}{" "}
+                ungraded questions. Scores use only verified questions;
+                choose-two questions require both correct selections.
               </div>
               <div className="card row spread">
                 <div>
@@ -482,8 +484,12 @@ export default function Home() {
                     }}
                   >
                     {new Date(a.submittedAt).toLocaleString()} ·{" "}
-                    {a.percentage === null ? "Ungraded" : a.percentage + "%"} ·{" "}
-                    {a.review.length} questions →
+                    {a.percentage === null
+                      ? "Ungraded"
+                      : a.percentage.toLocaleString("en", {
+                          maximumFractionDigits: 2,
+                        }) + "%"}{" "}
+                    · {a.review.length} questions →
                   </button>
                 ))
               )}
@@ -496,7 +502,7 @@ export default function Home() {
                 <h1>
                   {result.percentage === null
                     ? "Practice completed"
-                    : `${result.percentage}% verified score`}
+                    : `${result.percentage.toLocaleString("en", { maximumFractionDigits: 2 })}% verified score`}
                 </h1>
                 <p className="muted">
                   {result.correct}/{result.graded} verified answers correct ·{" "}
