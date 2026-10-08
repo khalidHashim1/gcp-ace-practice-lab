@@ -1,0 +1,46 @@
+name: Validate application and infrastructure
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm run validate:questions
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - run: docker build -t ace-ci .
+      - run: |
+          docker run -d --name ace -p 8080:8080 -e DATA_MODE=firestore -e GOOGLE_CLOUD_PROJECT=ci-test ace-ci
+          for i in $(seq 1 30); do
+            if curl --fail http://localhost:8080/api/health; then exit 0; fi
+            sleep 2
+          done
+          docker logs ace
+          exit 1
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+      - run: terraform fmt -check -recursive infra
+      - run: |
+          for dir in infra/bootstrap infra/environments/dev infra/environments/prod; do
+            terraform -chdir="$dir" init -backend=false
+            terraform -chdir="$dir" validate
+          done
