@@ -4,18 +4,19 @@ This report distinguishes completed checks from prepared but untested deployment
 
 | Check                                         | Result                                                                                                                  |
 | --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Original PDF extraction                       | 81 sequential questions; four options each; questions 52 and 73 require two selections                                  |
+| Original PDF extraction                       | 81 sequential questions; four options, with five on 52 and 73; questions 52 and 73 require two selections                                  |
 | Reproducible import                           | Regenerated all 81 question records and compared them successfully                                                      |
-| Question validation                           | Pass; all 81 ungraded, zero fabricated keys                                                                             |
+| Question validation                           | Pass; public seed 81 ungraded; separate protected bank 78 verified and 3 ungraded                                                                             |
+| Python importer regression tests | 3 pass; rejects missing, duplicate, out-of-order and unsupported labels |
 | ESLint                                        | Pass with zero warnings                                                                                                 |
 | TypeScript application check                  | Pass                                                                                                                    |
-| Vitest                                        | 18 tests pass across scoring, exam controls, local API integration and cloud authorization contracts                    |
+| Vitest                                        | 24 tests pass across scoring, exam controls, local API integration and cloud authorization contracts                    |
 | Production Next.js build                      | Pass without Google Cloud credentials                                                                                   |
 | Production dependency audit                   | Zero known vulnerabilities reported by npm audit at verification time                                                   |
 | Terraform formatting / parsing                | Pass for bootstrap, module, dev and prod                                                                                |
 | Terraform initialization                      | Dev provider downloaded and dependency lock generated                                                                   |
 | Terraform provider validation                 | Pass in GitHub Actions for bootstrap, dev and prod; local environment prohibits provider Unix sockets             |
-| Desktop / mobile browser tests                | Pass in GitHub Actions; both desktop and mobile Playwright cases executed successfully |
+| Desktop / mobile browser tests | Previous baseline passed in GitHub Actions. New mixed, missing-answer and five-option cases await PR CI; local Chromium download failed. |
 | Screenshots / visual QA                       | Not available; no fabricated screenshots included                                                                       |
 | Docker build and container health             | Pass in GitHub Actions; image built and running container health endpoint returned success                                                          |
 | Real Firebase sign-in / Firestore persistence | Not tested against Google Cloud; mocked SDK tests validate authorization contracts only                                 |
@@ -38,6 +39,7 @@ npm run validate:questions
 npm run lint
 npm run typecheck
 npm test
+npm run test:importer
 npm run build
 npm audit --omit=dev --audit-level=high
 npx playwright install --with-deps chromium
