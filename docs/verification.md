@@ -14,13 +14,15 @@ This report distinguishes completed checks from prepared but untested deployment
 | Production dependency audit                   | Zero known vulnerabilities reported by npm audit at verification time                                                   |
 | Terraform formatting / parsing                | Pass for bootstrap, module, dev and prod                                                                                |
 | Terraform initialization                      | Dev provider downloaded and dependency lock generated                                                                   |
-| Terraform provider validation                 | Blocked: execution environment prohibits provider Unix sockets; CI includes validation for all environments             |
-| Desktop / mobile browser tests                | Two Playwright cases defined and discovered; not executed successfully because the browser download is unavailable here |
+| Terraform provider validation                 | Pass in GitHub Actions for bootstrap, dev and prod; local environment prohibits provider Unix sockets             |
+| Desktop / mobile browser tests                | Pass in GitHub Actions; both desktop and mobile Playwright cases executed successfully |
 | Screenshots / visual QA                       | Not available; no fabricated screenshots included                                                                       |
-| Docker build and container health             | Not run: Docker is not installed here; CI includes both checks                                                          |
+| Docker build and container health             | Pass in GitHub Actions; image built and running container health endpoint returned success                                                          |
 | Real Firebase sign-in / Firestore persistence | Not tested against Google Cloud; mocked SDK tests validate authorization contracts only                                 |
 | Cloud Build / Cloud Run / WIF deployment      | Not attempted; requires project setup and approval                                                                      |
-| GitHub connection                             | Public repository created under khalidHashim1 using the GitHub website; source publication verified separately              |
+| GitHub connection                             | Public repository published under khalidHashim1; all 65 tracked files match the local verified source              |
+
+CI evidence: [application, browser and Docker checks](https://github.com/khalidHashim1/gcp-ace-practice-lab/actions/runs/37712401504) and [corrected Terraform validation](https://github.com/khalidHashim1/gcp-ace-practice-lab/actions/runs/37712667781). The first run exposed a publication error in the Terraform module; it was corrected and the complete remote source was compared with the local source. These checks do not provision or validate live Google Cloud services.
 
 ## Test scope
 
