@@ -1,0 +1,13 @@
+variable "project_id" { type = string }
+variable "region" { type = string }
+variable "firestore_location" { type = string }
+variable "environment" { type = string }
+variable "github_repository" { type = string }
+variable "github_owner_id" { type = string }
+variable "github_repository_id" { type = string }
+variable "image" { type = string }
+variable "firebase_api_key" { type = string }
+variable "firebase_app_id" { type = string }
+variable "enable_service" { type = bool }
+variable "public_access" { type = bool }
+variable "authorized_domains" { type = list(string) }
