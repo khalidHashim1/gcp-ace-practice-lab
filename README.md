@@ -2,14 +2,14 @@
 
 A Google Cloud Associate Cloud Engineer study platform and a practical cloud engineering portfolio project by **Khalid Hashim**. Built with Next.js, TypeScript and Tailwind CSS; designed for Cloud Run with keyless CI/CD and Terraform-managed infrastructure.
 
-> **Honest study results:** the supplied PDF has 81 questions and no answer key. All imported questions are **ungraded**. The app tracks completion without inventing scores. Only questions with a verified key, explanation, and official reference contribute to scores.
+> **Honest study results:** all 81 questions were reviewed against official documentation. The separate protected bank grades **78**; questions **53, 60 and 74** remain ungraded. The public repository contains no private keys. Load the protected bank to enable scoring; only verified questions contribute to the denominator.
 
 ## What you can do
 
 - Practice by topic or take a randomized, 120-minute, 81-question mock exam.
 - Select single or multiple answers, navigate freely, and flag questions.
 - Track question coverage and completed attempts; review selections and topic results.
-- Filter verified incorrect answers and read official references when keys are added.
+- Filter verified incorrect answers and read official references from the protected bank.
 - Switch between responsive light and dark interfaces.
 - Import, validate and edit the bank through the protected admin JSON editor.
 - Run locally without a Google account or cloud credentials.
@@ -64,6 +64,7 @@ npm run validate:questions
 npm run lint
 npm run typecheck
 npm test
+npm run test:importer
 npm run build
 ```
 
@@ -87,9 +88,11 @@ The cloud production server requires `DATA_MODE=firestore`, Firebase web configu
 
 ## Question integrity
 
-The import preserves question wording and A-D choices, collapsing PDF line wrapping into spaces. Questions 52 and 73 require two selections. Topic labels are heuristic editorial metadata and can be corrected through the admin editor. Source provenance includes the uploaded PDF SHA-256. The PDF itself is not redistributed in this repository.
+The importer preserves original wording and A–E choices, collapsing PDF line wrapping into spaces. A separate reviewed patch file corrects outdated or ambiguous wording while preserving learning objectives. Questions 52 and 73 require two selections. Topic labels are heuristic editorial metadata and can be corrected through the admin editor. Source provenance includes the uploaded PDF SHA-256. The PDF itself is not redistributed in this repository.
 
 Public quiz responses exclude keys, explanations and references. The server snapshots a bank when an exam starts and grades that version on submission. Admin imports are validated before storage. Add verified keys through the cloud admin editor; **do not commit private answer keys to this public repository**. Explanations and keys become available to that user after submission for study review.
+
+See [the question review and protected-bank setup](docs/question-review.md) for the 81-question audit, unresolved items and private import instructions. PDF highlights and the correction handoff were treated as proposed answers, not authoritative keys.
 
 ## Deployment and operations
 
@@ -103,7 +106,7 @@ The deploy workflow is manual. Configure GitHub `dev` and `prod` environments an
 
 ## Portfolio value
 
-This project demonstrates full-stack delivery, IAM separation, server-side authorization, Terraform modules, secure remote state, immutable container deployment, keyless CI/CD, observability, and cost-aware serverless architecture. It also demonstrates an engineering decision to keep scoring unavailable until the source answers can be verified.
+This project demonstrates full-stack delivery, IAM separation, server-side authorization, Terraform modules, secure remote state, immutable container deployment, keyless CI/CD, observability, and cost-aware serverless architecture. It also demonstrates documented evidence review and conservative grading when a question remains ambiguous.
 
 [Portfolio](https://khalidhashim.com)
 

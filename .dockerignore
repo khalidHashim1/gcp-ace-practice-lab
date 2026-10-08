@@ -1,5 +1,7 @@
 .git
 node_modules
+.private
+*.protected.json
 **/node_modules
 **/.next
 **/.local

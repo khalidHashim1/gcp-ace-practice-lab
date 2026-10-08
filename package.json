@@ -11,6 +11,7 @@
     "lint": "eslint apps/web --max-warnings 0",
     "typecheck": "tsc --noEmit -p apps/web",
     "test": "vitest run",
+    "test:importer": "python3 -m unittest discover -s tests -p 'test_*.py'",
     "validate:questions": "node --import tsx scripts/validate.ts",
     "format": "prettier --write apps/web scripts tests e2e *.ts *.mjs *.json .github docs README.md",
     "test:e2e": "playwright test"
