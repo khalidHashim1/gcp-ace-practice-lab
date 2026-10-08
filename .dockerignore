@@ -1,0 +1,10 @@
+.git
+node_modules
+**/node_modules
+**/.next
+**/.local
+.env*
+**/.env*
+infra
+*.zip
+gha-creds-*.json

@@ -1,0 +1,31 @@
+{
+  "name": "gcp-ace-practice-lab",
+  "private": true,
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web",
+    "start": "npm run start -w apps/web",
+    "lint": "eslint apps/web --max-warnings 0",
+    "typecheck": "tsc --noEmit -p apps/web",
+    "test": "vitest run",
+    "validate:questions": "node --import tsx scripts/validate.ts",
+    "format": "prettier --write apps/web scripts tests e2e *.ts *.mjs *.json .github docs README.md",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^16.4.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
