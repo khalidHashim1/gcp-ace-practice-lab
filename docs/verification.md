@@ -16,14 +16,16 @@ This report distinguishes completed checks from prepared but untested deployment
 | Terraform formatting / parsing                | Pass for bootstrap, module, dev and prod                                                                                |
 | Terraform initialization                      | Dev provider downloaded and dependency lock generated                                                                   |
 | Terraform provider validation                 | Pass in GitHub Actions for bootstrap, dev and prod; local environment prohibits provider Unix sockets             |
-| Desktop / mobile browser tests | Previous baseline passed in GitHub Actions. New mixed, missing-answer and five-option cases await PR CI; local Chromium download failed. |
+| Desktop / mobile browser tests | Pass in PR CI: all 4 desktop/mobile cases, including full, partial and missing answers, five options, private-field stripping and submission-only explanations/links. Local Chromium download failed; browser execution was verified remotely. |
 | Screenshots / visual QA                       | Not available; no fabricated screenshots included                                                                       |
 | Docker build and container health             | Pass in GitHub Actions; image built and running container health endpoint returned success                                                          |
 | Real Firebase sign-in / Firestore persistence | Not tested against Google Cloud; mocked SDK tests validate authorization contracts only                                 |
 | Cloud Build / Cloud Run / WIF deployment      | Not attempted; requires project setup and approval                                                                      |
-| GitHub connection                             | Public repository published under khalidHashim1; all 65 tracked files match the local verified source              |
+| GitHub connection                             | Public repository published under khalidHashim1; all 71 tracked files on the PR branch match the local verified source              |
 
 CI evidence: [application, browser and Docker checks](https://github.com/khalidHashim1/gcp-ace-practice-lab/actions/runs/37712401504) and [corrected Terraform validation](https://github.com/khalidHashim1/gcp-ace-practice-lab/actions/runs/37712667781). The first run exposed a publication error in the Terraform module; it was corrected and the complete remote source was compared with the local source. These checks do not provision or validate live Google Cloud services.
+
+Partial-scoring PR evidence: [GitHub Actions run](https://github.com/khalidHashim1/gcp-ace-practice-lab/actions/runs/37745980053). The live local bank contains 78 verified and 3 ungraded questions (53, 60, 74); public questions and sessions omit keys, explanations and references. Missing verified answers contribute zero credit and remain in the denominator. A fresh checkout requires the separately provided protected bank; no private keys are distributed by git or the Docker image.
 
 ## Test scope
 
