@@ -1,0 +1,47 @@
+name: Approved Cloud Run deployment
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options: [dev, prod]
+        default: dev
+        required: true
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm run validate:questions && npm run lint && npm run typecheck && npm test && npm run build
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.DEPLOY_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v3
+      - name: Build immutable revision and deploy existing service
+        env:
+          PROJECT: ${{ vars.GCP_PROJECT_ID }}
+          REGION: ${{ vars.GCP_REGION }}
+          REPOSITORY: ${{ vars.IMAGE_REPOSITORY }}
+          BUILD_SA: ${{ vars.BUILD_SERVICE_ACCOUNT }}
+          SOURCE_BUCKET: ${{ vars.SOURCE_BUCKET }}
+          SERVICE: ace-${{ inputs.environment }}
+        run: |
+          IMAGE="$REPOSITORY/web:$GITHUB_SHA"
+          gcloud builds submit . --project="$PROJECT" --region="$REGION" --config=cloudbuild.yaml --service-account="projects/$PROJECT/serviceAccounts/$BUILD_SA" --gcs-source-staging-dir="gs://$SOURCE_BUCKET/source" --substitutions="_IMAGE=$IMAGE"
+          DIGEST=$(gcloud artifacts docker images describe "$IMAGE" --project="$PROJECT" --format='value(image_summary.digest)')
+          gcloud run services update "$SERVICE" --project="$PROJECT" --region="$REGION" --image="$REPOSITORY/web@$DIGEST"
+          echo "Image deployed: $REPOSITORY/web@$DIGEST" >> "$GITHUB_STEP_SUMMARY"
