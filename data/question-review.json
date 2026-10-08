@@ -1,0 +1,741 @@
+[
+  {
+    "number": 1,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Explicitly state firewall prerequisite.",
+    "references": [
+      "https://docs.cloud.google.com/vpc/docs/vpc"
+    ]
+  },
+  {
+    "number": 2,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/kubernetes-engine/docs/concepts/alias-ips"
+    ]
+  },
+  {
+    "number": 3,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Specify relational transactions and global consistency.",
+    "references": [
+      "https://docs.cloud.google.com/spanner/docs/instances"
+    ]
+  },
+  {
+    "number": 4,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/vpc/docs/private-google-access"
+    ]
+  },
+  {
+    "number": 5,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "State migration permission and policy prerequisites.",
+    "references": [
+      "https://docs.cloud.google.com/resource-manager/docs/project-migration"
+    ]
+  },
+  {
+    "number": 6,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/iam/docs/creating-custom-roles"
+    ]
+  },
+  {
+    "number": 7,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Replace contradictory fault-tolerance wording.",
+    "references": [
+      "https://docs.cloud.google.com/kubernetes-engine/docs/concepts/spot-vms"
+    ]
+  },
+  {
+    "number": 8,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/vpc/docs/vpc-peering"
+    ]
+  },
+  {
+    "number": 9,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Specify aggregated descendant log sink.",
+    "references": [
+      "https://docs.cloud.google.com/resource-manager/docs/creating-managing-folders",
+      "https://docs.cloud.google.com/logging/docs/export/aggregated_sinks"
+    ]
+  },
+  {
+    "number": 10,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Specify per-instance connector calls and reduce scaling ceiling.",
+    "references": [
+      "https://docs.cloud.google.com/run/docs/configuring/max-instances"
+    ]
+  },
+  {
+    "number": 11,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Make complete private ingress topology explicit.",
+    "references": [
+      "https://docs.cloud.google.com/run/docs/securing/private-networking"
+    ]
+  },
+  {
+    "number": 12,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/compute/docs/ip-addresses/reserve-static-internal-ip-address"
+    ]
+  },
+  {
+    "number": 13,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/iam/docs/service-account-impersonation"
+    ]
+  },
+  {
+    "number": 14,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Domain restrictions govern allowed IAM bindings; use scoped groups.",
+    "references": [
+      "https://docs.cloud.google.com/resource-manager/docs/organization-policy/restricting-domains"
+    ]
+  },
+  {
+    "number": 15,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/run/docs/configuring/connecting-vpc"
+    ]
+  },
+  {
+    "number": 16,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Remove unnecessary versioning and obsolete object-change notifications.",
+    "references": [
+      "https://docs.cloud.google.com/storage/docs/pubsub-notifications"
+    ]
+  },
+  {
+    "number": 17,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Autopilot alone does not guarantee private exposure.",
+    "references": [
+      "https://docs.cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview"
+    ]
+  },
+  {
+    "number": 18,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/kubernetes-engine/docs/concepts/workload-identity"
+    ]
+  },
+  {
+    "number": 19,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/vpc/docs/subnets"
+    ]
+  },
+  {
+    "number": 20,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/compute/docs/oslogin"
+    ]
+  },
+  {
+    "number": 21,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Remove predefined-role ambiguity.",
+    "references": [
+      "https://docs.cloud.google.com/iam/docs/creating-custom-roles"
+    ]
+  },
+  {
+    "number": 22,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/docs/terraform"
+    ]
+  },
+  {
+    "number": 23,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Explicit export destination and configuration.",
+    "references": [
+      "https://docs.cloud.google.com/billing/docs/how-to/export-data-bigquery-setup"
+    ]
+  },
+  {
+    "number": 24,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Scope idle-cost claim to compute; constrain HTTP duration.",
+    "references": [
+      "https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run"
+    ]
+  },
+  {
+    "number": 25,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/firewall/docs/firewall-policies",
+      "https://docs.cloud.google.com/vpc/docs/shared-vpc"
+    ]
+  },
+  {
+    "number": 26,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Warm tagged revision, not all deployments; avoid absolute latency claim.",
+    "references": [
+      "https://docs.cloud.google.com/run/docs/configuring/min-instances"
+    ]
+  },
+  {
+    "number": 27,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "VPA can restart a single replica.",
+    "references": [
+      "https://docs.cloud.google.com/kubernetes-engine/docs/concepts/verticalpodautoscaler"
+    ]
+  },
+  {
+    "number": 28,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/billing/docs/how-to/export-data-bigquery-setup",
+      "https://docs.cloud.google.com/data-studio/connect-to-google-bigquery"
+    ]
+  },
+  {
+    "number": 29,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/compute/docs/oslogin/manage-oslogin-in-an-org"
+    ]
+  },
+  {
+    "number": 30,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/pubsub/docs/pull-messages"
+    ]
+  },
+  {
+    "number": 31,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/billing/docs/how-to/manage-billing-account"
+    ]
+  },
+  {
+    "number": 32,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/vpc/docs/vpc"
+    ]
+  },
+  {
+    "number": 33,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Project deletion is destructive, not a pause; residual billing caveat.",
+    "references": [
+      "https://docs.cloud.google.com/resource-manager/docs/delete-restore-projects"
+    ]
+  },
+  {
+    "number": 34,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "State query-project Job User prerequisite and dataset scope.",
+    "references": [
+      "https://docs.cloud.google.com/bigquery/docs/control-access-to-resources-iam"
+    ]
+  },
+  {
+    "number": 35,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/iam/docs/creating-custom-roles"
+    ]
+  },
+  {
+    "number": 36,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Use current Storage CLI.",
+    "references": [
+      "https://docs.cloud.google.com/sdk/gcloud/reference/storage/rsync"
+    ]
+  },
+  {
+    "number": 37,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Separate geographic availability requirements from storage class cost.",
+    "references": [
+      "https://docs.cloud.google.com/storage/docs/storage-classes"
+    ]
+  },
+  {
+    "number": 38,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/resource-manager/docs/creating-managing-folders"
+    ]
+  },
+  {
+    "number": 39,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Limit claim to supported location-constrained resources.",
+    "references": [
+      "https://docs.cloud.google.com/resource-manager/docs/organization-policy/defining-locations"
+    ]
+  },
+  {
+    "number": 40,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/billing/docs/how-to/manage-billing-account"
+    ]
+  },
+  {
+    "number": 41,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Clarify permissions and organization-wide binding.",
+    "references": [
+      "https://docs.cloud.google.com/iam/docs/creating-custom-roles"
+    ]
+  },
+  {
+    "number": 42,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Use current canonical service identifier.",
+    "references": [
+      "https://docs.cloud.google.com/service-usage/docs/enabled-service"
+    ]
+  },
+  {
+    "number": 43,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Regional disk recovery uses surviving replica zone; not instant app recovery.",
+    "references": [
+      "https://docs.cloud.google.com/compute/docs/disks/regional-persistent-disk"
+    ]
+  },
+  {
+    "number": 44,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Remove unnecessary basic Viewer and state act-as prerequisite.",
+    "references": [
+      "https://docs.cloud.google.com/compute/docs/access/iam"
+    ]
+  },
+  {
+    "number": 45,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "State timeout and memory configuration.",
+    "references": [
+      "https://docs.cloud.google.com/run/docs/configuring/jobs/memory-limits",
+      "https://docs.cloud.google.com/run/docs/configuring/task-timeout"
+    ]
+  },
+  {
+    "number": 46,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Separate commands and specify cluster location.",
+    "references": [
+      "https://docs.cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl"
+    ]
+  },
+  {
+    "number": 47,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Replace long-running HTTP task with scheduled job.",
+    "references": [
+      "https://docs.cloud.google.com/tasks/docs/quotas",
+      "https://docs.cloud.google.com/run/docs/create-jobs",
+      "https://docs.cloud.google.com/run/docs/configuring/task-timeout"
+    ]
+  },
+  {
+    "number": 48,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Specify retained archive duration rather than imply deletion.",
+    "references": [
+      "https://docs.cloud.google.com/storage/docs/storage-classes"
+    ]
+  },
+  {
+    "number": 49,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Avoid zero-cost blanket claim.",
+    "references": [
+      "https://docs.cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration"
+    ]
+  },
+  {
+    "number": 50,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Copy roles is separate from granting roles.",
+    "references": [
+      "https://docs.cloud.google.com/sdk/gcloud/reference/iam/roles/copy"
+    ]
+  },
+  {
+    "number": 51,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Avoid timestamp-leading row-key hotspots and define consistency.",
+    "references": [
+      "https://docs.cloud.google.com/bigtable/docs/schema-design-time-series"
+    ]
+  },
+  {
+    "number": 52,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Modern browser authentication and explicit default project context.",
+    "references": [
+      "https://docs.cloud.google.com/sdk/gcloud/reference/init",
+      "https://docs.cloud.google.com/sdk/gcloud/reference/auth/login",
+      "https://docs.cloud.google.com/sdk/gcloud/reference/config/set"
+    ]
+  },
+  {
+    "number": 53,
+    "status": "ungraded",
+    "reviewedOn": "2026-10-08",
+    "reason": "Bandwidth, transfer deadline and connectivity are unspecified. Both agent-based Storage Transfer Service and Transfer Appliance can support the on-premises transfer; volume alone does not prove a unique cheapest option.",
+    "references": [
+      "https://docs.cloud.google.com/storage-transfer/docs/overview"
+    ]
+  },
+  {
+    "number": 54,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Use current functions name and clarify durable results.",
+    "references": [
+      "https://docs.cloud.google.com/pubsub/docs/overview"
+    ]
+  },
+  {
+    "number": 55,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Specify supported engine and automatic IAM proxy flag.",
+    "references": [
+      "https://docs.cloud.google.com/sql/docs/postgres/iam-authentication"
+    ]
+  },
+  {
+    "number": 56,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/compute/docs/autoscaler"
+    ]
+  },
+  {
+    "number": 57,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/logging/docs/export/configure_export_v2"
+    ]
+  },
+  {
+    "number": 58,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/storage/docs/lifecycle"
+    ]
+  },
+  {
+    "number": 59,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Bill for provisioned pod resources, not measured utilization.",
+    "references": [
+      "https://docs.cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview"
+    ]
+  },
+  {
+    "number": 60,
+    "status": "ungraded",
+    "reviewedOn": "2026-10-08",
+    "reason": "Historical-log retention and audit access frequency are unspecified. Archive minimum duration and retrieval charges prevent a supported unique cost-optimal choice.",
+    "references": [
+      "https://docs.cloud.google.com/storage/docs/storage-classes"
+    ]
+  },
+  {
+    "number": 61,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Network tiers apply to internet-facing resources, not VPCs.",
+    "references": [
+      "https://docs.cloud.google.com/network-tiers/docs/overview"
+    ]
+  },
+  {
+    "number": 62,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "OS Login setup includes enabling metadata and granting roles.",
+    "references": [
+      "https://docs.cloud.google.com/compute/docs/oslogin"
+    ]
+  },
+  {
+    "number": 63,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Data freshness is streaming-specific.",
+    "references": [
+      "https://docs.cloud.google.com/dataflow/docs/guides/using-monitoring-intf"
+    ]
+  },
+  {
+    "number": 64,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "State job permissions, use keyless runtime credentials.",
+    "references": [
+      "https://docs.cloud.google.com/bigquery/docs/control-access-to-resources-iam",
+      "https://docs.cloud.google.com/iam/docs/service-account-impersonation"
+    ]
+  },
+  {
+    "number": 65,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Publish acknowledgment differs from processing acknowledgment.",
+    "references": [
+      "https://docs.cloud.google.com/run/docs/triggering/pubsub-push"
+    ]
+  },
+  {
+    "number": 66,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Use current Observability Analytics name.",
+    "references": [
+      "https://docs.cloud.google.com/logging/docs/log-analytics"
+    ]
+  },
+  {
+    "number": 67,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Specify log buckets and identity terminology.",
+    "references": [
+      "https://docs.cloud.google.com/logging/docs/access-control"
+    ]
+  },
+  {
+    "number": 68,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Specify dataset permissions independently of query job grant.",
+    "references": [
+      "https://docs.cloud.google.com/bigquery/docs/control-access-to-resources-iam"
+    ]
+  },
+  {
+    "number": 69,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/spanner/docs/overview"
+    ]
+  },
+  {
+    "number": 70,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "gcloud default is distinct from kubectl context.",
+    "references": [
+      "https://docs.cloud.google.com/kubernetes-engine/docs/how-to/managing-clusters"
+    ]
+  },
+  {
+    "number": 71,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/dataflow/docs/guides/templates/provided/pubsub-topic-subscription-to-text"
+    ]
+  },
+  {
+    "number": 72,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Remove global unconditional sub-ms SLA claim.",
+    "references": [
+      "https://docs.cloud.google.com/bigtable/docs/overview"
+    ]
+  },
+  {
+    "number": 73,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/iam/docs/best-practices-service-accounts"
+    ]
+  },
+  {
+    "number": 74,
+    "status": "ungraded",
+    "reviewedOn": "2026-10-08",
+    "reason": "Current AlloyDB limit is 128 TiB per cluster. More than 150 TB per region exceeds one cluster, but multiple independent databases could span clusters; required partitioning and per-cluster sizes are unspecified.",
+    "references": [
+      "https://docs.cloud.google.com/alloydb/quotas"
+    ]
+  },
+  {
+    "number": 75,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Cloud NAT is a managed gateway, not a VM instance.",
+    "references": [
+      "https://docs.cloud.google.com/nat/docs/gke-example"
+    ]
+  },
+  {
+    "number": 76,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Scope single billing account and actual engineer notification audience.",
+    "references": [
+      "https://docs.cloud.google.com/billing/docs/how-to/budgets"
+    ]
+  },
+  {
+    "number": 77,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/docs/terraform"
+    ]
+  },
+  {
+    "number": 78,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Original wording retained after official-documentation review.",
+    "references": [
+      "https://docs.cloud.google.com/compute/docs/instances/spot"
+    ]
+  },
+  {
+    "number": 79,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Explicit retry and timeout settings.",
+    "references": [
+      "https://docs.cloud.google.com/run/docs/execute/jobs-on-schedule",
+      "https://docs.cloud.google.com/run/docs/create-jobs"
+    ]
+  },
+  {
+    "number": 80,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "Default allow-internal must be removed or overridden.",
+    "references": [
+      "https://docs.cloud.google.com/firewall/docs/firewalls"
+    ]
+  },
+  {
+    "number": 81,
+    "status": "verified-for-corrected-wording",
+    "reviewedOn": "2026-10-08",
+    "reason": "IAP includes firewall and identity prerequisites.",
+    "references": [
+      "https://docs.cloud.google.com/iap/docs/using-tcp-forwarding"
+    ]
+  }
+]

@@ -14,3 +14,7 @@ coverage/
 playwright-report/
 test-results/
 *.tfplan
+.private/
+*.protected.json
+
+__pycache__/
