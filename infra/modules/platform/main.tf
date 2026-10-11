@@ -99,6 +99,11 @@ resource "google_storage_bucket_iam_member" "source_deploy" {
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.deploy.email}"
 }
+resource "google_storage_bucket_iam_member" "source_deploy_bucket_reader" {
+  bucket = google_storage_bucket.source.name
+  role   = "roles/storage.legacyBucketReader"
+  member = "serviceAccount:${google_service_account.deploy.email}"
+}
 resource "google_firestore_database" "database" {
   project                 = var.project_id
   name                    = "(default)"
@@ -127,7 +132,7 @@ resource "google_iam_workload_identity_pool_provider" "github" {
     "attribute.repository"    = "assertion.repository"
     "attribute.repository_id" = "assertion.repository_id"
   }
-  attribute_condition = "assertion.repository_owner_id == '${var.github_owner_id}' && assertion.repository_id == '${var.github_repository_id}' && assertion.ref == 'refs/heads/main' && assertion.sub == 'repo:${var.github_repository}:environment:${var.environment}'"
+  attribute_condition = "assertion.repository == 'khalidHashim1/gcp-ace-practice-lab' && assertion.ref == 'refs/heads/main' && assertion.sub == 'repo:khalidHashim1@128578192/gcp-ace-practice-lab@1409539694:environment:prod'"
   oidc { issuer_uri = "https://token.actions.githubusercontent.com" }
 }
 resource "google_service_account_iam_member" "federation" {
@@ -142,6 +147,7 @@ resource "google_cloud_run_v2_service" "web" {
   location            = var.region
   deletion_protection = var.environment == "prod"
   ingress             = "INGRESS_TRAFFIC_ALL"
+
   template {
     service_account                  = google_service_account.runtime.email
     timeout                          = "60s"
@@ -182,10 +188,11 @@ resource "google_cloud_run_v2_service" "web" {
         initial_delay_seconds = 5
         period_seconds        = 5
       }
+
     }
   }
   depends_on = [google_project_iam_member.runtime, google_project_service.apis]
-  lifecycle { ignore_changes = [template[0].containers[0].image] }
+  lifecycle { ignore_changes = [template[0].containers[0].image, client, client_version] }
 }
 resource "google_cloud_run_v2_service_iam_member" "deploy" {
   count    = var.enable_service ? 1 : 0
