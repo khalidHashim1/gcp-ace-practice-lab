@@ -51,28 +51,6 @@ jobs:
 
       - uses: google-github-actions/setup-gcloud@v3
 
-      - name: Verify Google Cloud identity
-        run: |
-          gcloud auth list
-          gcloud config get-value project
-
-      - name: Test Cloud Storage access
-        run: |
-          echo "Testing bucket listing..."
-          gcloud storage ls gs://gcp-ace-practice-prod-ace-prod-build-source/
-
-          echo "Testing bucket metadata access..."
-          gcloud storage buckets describe gs://gcp-ace-practice-prod-ace-prod-build-source
-
-          echo "Testing Cloud Storage upload..."
-          echo "GitHub Actions storage test" > /tmp/gha-storage-test.txt
-
-          gcloud storage cp \
-            /tmp/gha-storage-test.txt \
-            gs://gcp-ace-practice-prod-ace-prod-build-source/source/gha-storage-test.txt
-
-          echo "Storage tests completed successfully."
-
       - name: Build immutable revision and deploy existing service
         env:
           PROJECT: ${{ vars.GCP_PROJECT_ID }}
