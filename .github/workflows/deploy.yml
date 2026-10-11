@@ -43,7 +43,6 @@ jobs:
 
       - uses: google-github-actions/setup-gcloud@v3
 
-      # Diagnostic step to verify authentication
       - name: Verify Google Cloud identity
         run: |
           echo "Active Google Cloud account:"
@@ -51,6 +50,11 @@ jobs:
 
           echo "Configured Google Cloud project:"
           gcloud config get-value project
+
+      - name: Test Cloud Storage access
+        run: |
+          echo "Testing Cloud Storage bucket access..."
+          gcloud storage ls gs://gcp-ace-practice-prod-ace-prod-build-source/
 
       - name: Build immutable revision and deploy existing service
         env:
