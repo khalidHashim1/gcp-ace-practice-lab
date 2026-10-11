@@ -10,6 +10,7 @@ import {
 } from "../../../lib/server";
 import { score } from "../../../lib/exam";
 import type { Question } from "../../../lib/schema";
+import { optionIdSchema } from "../../../lib/schema";
 export async function GET(r: Request) {
   try {
     return Response.json(await history((await identity(r)).uid));
@@ -23,10 +24,7 @@ export async function POST(r: Request) {
     const p = z
       .object({
         sessionId: z.string().uuid(),
-        answers: z.record(
-          z.string(),
-          z.array(z.enum(["A", "B", "C", "D"])).max(4),
-        ),
+        answers: z.record(z.string(), z.array(optionIdSchema).max(5)),
         flags: z.array(z.string()).max(81),
       })
       .safeParse(await readJson(r));
@@ -40,6 +38,7 @@ export async function POST(r: Request) {
       const q = qs.find((q) => q.id === id);
       if (
         !q ||
+        selected.some((id) => !q.options.some((o) => o.id === id)) ||
         selected.length > q.selectionCount ||
         new Set(selected).size !== selected.length
       )

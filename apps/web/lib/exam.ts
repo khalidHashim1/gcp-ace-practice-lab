@@ -39,7 +39,7 @@ export function score(
     correct,
     graded,
     ungraded: questions.length - graded,
-    percentage: graded ? Math.round((correct / graded) * 100) : null,
+    percentage: graded ? (correct / graded) * 100 : null,
     topics,
     review,
   };

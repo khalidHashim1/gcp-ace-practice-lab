@@ -1,18 +1,18 @@
 import { z } from "zod";
+export const optionIdSchema = z.enum(["A", "B", "C", "D", "E"]);
 export const questionSchema = z
   .object({
     id: z.string().regex(/^ace-\d{3}$/),
     number: z.number().int().positive(),
     prompt: z.string().min(10),
     options: z
-      .array(
-        z.object({ id: z.enum(["A", "B", "C", "D"]), text: z.string().min(1) }),
-      )
-      .length(4),
-    selectionCount: z.number().int().min(1).max(4),
+      .array(z.object({ id: optionIdSchema, text: z.string().min(1) }))
+      .min(4)
+      .max(5),
+    selectionCount: z.number().int().min(1).max(5),
     topic: z.string().min(1),
     verification: z.enum(["ungraded", "verified"]),
-    correctOptionIds: z.array(z.enum(["A", "B", "C", "D"])),
+    correctOptionIds: z.array(optionIdSchema),
     explanation: z.string().nullable(),
     references: z.array(
       z
@@ -36,8 +36,23 @@ export const questionSchema = z
     ),
   })
   .superRefine((q, ctx) => {
-    if (new Set(q.options.map((o) => o.id)).size !== 4)
+    if (new Set(q.options.map((o) => o.id)).size !== q.options.length)
       ctx.addIssue({ code: "custom", message: "Duplicate options" });
+    if (
+      q.options.map((o) => o.id).join("") !== "ABCDE".slice(0, q.options.length)
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Options must be sequential A-D or A-E",
+      });
+    if (
+      q.selectionCount > q.options.length ||
+      q.correctOptionIds.some((id) => !q.options.some((o) => o.id === id))
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Selection count and answer keys must match available options",
+      });
     if (
       q.verification === "verified" &&
       (q.correctOptionIds.length !== q.selectionCount ||

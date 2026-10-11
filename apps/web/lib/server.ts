@@ -57,8 +57,19 @@ export async function questions(): Promise<Question[]> {
       ),
     );
   } catch (e) {
-    if ((e as NodeJS.ErrnoException).code === "ENOENT")
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") {
+      if (process.env.QUESTION_BANK_PATH) {
+        return bankSchema.parse(
+          JSON.parse(
+            await fs.readFile(
+              /* turbopackIgnore: true */ process.env.QUESTION_BANK_PATH,
+              "utf8",
+            ),
+          ),
+        );
+      }
       return bankSchema.parse(source);
+    }
     throw e;
   }
 }
