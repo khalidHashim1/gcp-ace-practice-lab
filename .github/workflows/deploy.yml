@@ -56,6 +56,15 @@ jobs:
           echo "Testing Cloud Storage bucket access..."
           gcloud storage ls gs://gcp-ace-practice-prod-ace-prod-build-source/
 
+          echo "Testing Cloud Storage upload..."
+          echo "GitHub Actions storage test" > /tmp/gha-storage-test.txt
+
+          gcloud storage cp \
+            /tmp/gha-storage-test.txt \
+            gs://gcp-ace-practice-prod-ace-prod-build-source/source/gha-storage-test.txt
+
+          echo "Storage upload successful."
+
       - name: Build immutable revision and deploy existing service
         env:
           PROJECT: ${{ vars.GCP_PROJECT_ID }}
