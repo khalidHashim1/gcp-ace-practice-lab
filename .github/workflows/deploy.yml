@@ -6,7 +6,9 @@ on:
     inputs:
       environment:
         type: choice
-        options: [dev, prod]
+        options:
+          - dev
+          - prod
         default: dev
         required: true
 
@@ -34,7 +36,13 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run validate:questions && npm run lint && npm run typecheck && npm test && npm run build
+      - name: Validate application
+        run: |
+          npm run validate:questions
+          npm run lint
+          npm run typecheck
+          npm test
+          npm run build
 
       - uses: google-github-actions/auth@v3
         with:
@@ -45,16 +53,16 @@ jobs:
 
       - name: Verify Google Cloud identity
         run: |
-          echo "Active Google Cloud account:"
           gcloud auth list
-
-          echo "Configured Google Cloud project:"
           gcloud config get-value project
 
       - name: Test Cloud Storage access
         run: |
-          echo "Testing Cloud Storage bucket access..."
+          echo "Testing bucket listing..."
           gcloud storage ls gs://gcp-ace-practice-prod-ace-prod-build-source/
+
+          echo "Testing bucket metadata access..."
+          gcloud storage buckets describe gs://gcp-ace-practice-prod-ace-prod-build-source
 
           echo "Testing Cloud Storage upload..."
           echo "GitHub Actions storage test" > /tmp/gha-storage-test.txt
@@ -63,7 +71,7 @@ jobs:
             /tmp/gha-storage-test.txt \
             gs://gcp-ace-practice-prod-ace-prod-build-source/source/gha-storage-test.txt
 
-          echo "Storage upload successful."
+          echo "Storage tests completed successfully."
 
       - name: Build immutable revision and deploy existing service
         env:
