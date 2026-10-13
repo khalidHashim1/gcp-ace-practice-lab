@@ -19,6 +19,20 @@ describe("question import", () => {
       Array.from({ length: 81 }, (_, i) => i + 1),
     );
     expect(bank.every((q) => q.verification === "ungraded")).toBe(true);
+    expect(bank[51].options.map((option) => option.id)).toEqual([
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+    ]);
+    expect(bank[72].options.map((option) => option.id)).toEqual([
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+    ]);
   });
   it("rejects unsupported verification and incomplete keys", () => {
     expect(() =>

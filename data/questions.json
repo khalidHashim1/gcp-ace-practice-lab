@@ -1485,7 +1485,7 @@
     "options": [
       {
         "id": "A",
-        "text": "Run gcloud auth login, enter your login credentials in the dialog window, and paste the received login token to gcloud CLI."
+        "text": "Run gcloud auth login and complete the supported browser authentication flow for your company user account."
       },
       {
         "id": "B",
@@ -1497,7 +1497,11 @@
       },
       {
         "id": "D",
-        "text": "Run gcloud config set compute/zone $my_zone to set the default zone for gcloud CLI. E Run gcloud config set project $my_project to set the default project for gcloud CLI."
+        "text": "Run gcloud config set compute/zone $my_zone to set the default zone for gcloud CLI."
+      },
+      {
+        "id": "E",
+        "text": "Run gcloud config set project $my_project to set the default project for gcloud CLI."
       }
     ],
     "selectionCount": 2,
@@ -2106,7 +2110,11 @@
       },
       {
         "id": "D",
-        "text": "Manage service accounts as resources. E Use random names for the service accounts."
+        "text": "Manage service accounts as resources."
+      },
+      {
+        "id": "E",
+        "text": "Use random names for the service accounts."
       }
     ],
     "selectionCount": 2,

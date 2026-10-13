@@ -6,13 +6,14 @@ export const questionSchema = z
     prompt: z.string().min(10),
     options: z
       .array(
-        z.object({ id: z.enum(["A", "B", "C", "D"]), text: z.string().min(1) }),
+        z.object({ id: z.enum(["A", "B", "C", "D", "E"]), text: z.string().min(1) }),
       )
-      .length(4),
+      .min(4)
+      .max(5),
     selectionCount: z.number().int().min(1).max(4),
     topic: z.string().min(1),
     verification: z.enum(["ungraded", "verified"]),
-    correctOptionIds: z.array(z.enum(["A", "B", "C", "D"])),
+    correctOptionIds: z.array(z.enum(["A", "B", "C", "D", "E"])),
     explanation: z.string().nullable(),
     references: z.array(
       z
@@ -36,7 +37,7 @@ export const questionSchema = z
     ),
   })
   .superRefine((q, ctx) => {
-    if (new Set(q.options.map((o) => o.id)).size !== 4)
+    if (new Set(q.options.map((o) => o.id)).size !== q.options.length)
       ctx.addIssue({ code: "custom", message: "Duplicate options" });
     if (
       q.verification === "verified" &&
