@@ -3,7 +3,7 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
   await page.goto("/");
   await expect(
     page.getByRole("heading", {
-      name: "Build confidence. Practice with purpose.",
+      name: "Practice with a clear path to confidence.",
     }),
   ).toBeVisible();
   await page.getByRole("button", { name: /Networking/ }).click();
@@ -12,9 +12,14 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
   await page
     .getByRole("button", { name: "Flag for review", exact: true })
     .click();
-  page.once("dialog", (d) => d.accept());
   await page
     .getByRole("button", { name: "Finish & review", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Finish this attempt?" }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Submit & view results", exact: true })
     .click();
   await expect(
     page.getByRole("heading", { name: "Practice completed" }),
@@ -35,7 +40,7 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
   await page.getByRole("button", { name: "Validate & save" }).click();
   await expect(page.getByText("Saved 81 validated questions.")).toBeVisible();
   await page.getByRole("button", { name: "Dashboard", exact: true }).click();
-  await page.getByRole("button", { name: "Start timed exam" }).click();
+  await page.getByRole("button", { name: /Start mock exam/ }).click();
   await expect(page.getByText(/remaining$/)).toBeVisible();
   await expect(page.locator(".numbers button")).toHaveCount(81);
   await page
