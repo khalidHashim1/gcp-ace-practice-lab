@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { score, toggleSelection, remainingSeconds } from "../apps/web/lib/exam";
+import { summarizeTopics } from "../apps/web/lib/analytics";
 import { bankSchema, publicQuestion } from "../apps/web/lib/schema";
 import source from "../data/questions.json";
 const bank = bankSchema.parse(source);
@@ -58,5 +59,25 @@ describe("exam controls", () => {
   it("clamps expired timers", () => {
     expect(remainingSeconds(1000, 2000)).toBe(0);
     expect(remainingSeconds(2001, 1000)).toBe(2);
+  });
+});
+describe("dashboard analytics", () => {
+  it("only presents a verified percentage when graded data exists", () => {
+    const summary = summarizeTopics(
+      ["Compute", "Storage"],
+      [{ topic: "Compute" }, { topic: "Compute" }, { topic: "Storage" }],
+      [
+        {
+          topics: {
+            Compute: { correct: 1, graded: 2, ungraded: 0 },
+            Storage: { correct: 0, graded: 0, ungraded: 1 },
+          },
+        },
+      ],
+    );
+    expect(summary).toEqual([
+      expect.objectContaining({ topic: "Compute", questions: 2, percentage: 50 }),
+      expect.objectContaining({ topic: "Storage", questions: 1, percentage: null }),
+    ]);
   });
 });
