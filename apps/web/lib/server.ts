@@ -6,8 +6,24 @@ import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import source from "../../../data/questions.json";
-import { bankSchema, type Question } from "./schema";
+import {
+  bankSchema,
+  examCatalogSchema,
+  type Exam,
+  type Question,
+} from "./schema";
 export const cloud = process.env.DATA_MODE === "firestore";
+const defaultExams: Exam[] = [
+  {
+    id: "ace-practice-1",
+    title: "ACE practice exam 1",
+    description:
+      "A randomized, full-length Associate Cloud Engineer simulation.",
+    questionBankId: "ace-practice-1",
+    questionCount: 60,
+    durationMinutes: 120,
+  },
+];
 function requireSafeMode() {
   if (process.env.NODE_ENV === "production" && !cloud)
     throw new Error("Production requires DATA_MODE=firestore");
@@ -41,34 +57,67 @@ export async function identity(request: Request) {
     throw new Error("UNAUTHORIZED");
   }
 }
-export async function questions(): Promise<Question[]> {
+function bankDocument(bankId: string) {
+  return bankId === "ace-practice-1"
+    ? "config/question-bank"
+    : `question-banks/${bankId}`;
+}
+export async function exams(): Promise<Exam[]> {
   requireSafeMode();
   if (cloud) {
-    const snap = await db().doc("config/question-bank").get();
+    const snap = await db().doc("config/exams").get();
+    return examCatalogSchema.parse(
+      snap.exists ? snap.data()?.exams : defaultExams,
+    );
+  }
+  try {
+    return examCatalogSchema.parse(
+      JSON.parse(await fs.readFile(path.join(dir, "exams.json"), "utf8")),
+    );
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return defaultExams;
+    throw e;
+  }
+}
+export async function questions(
+  bankId = "ace-practice-1",
+): Promise<Question[]> {
+  requireSafeMode();
+  if (cloud) {
+    const snap = await db().doc(bankDocument(bankId)).get();
     return bankSchema.parse(snap.exists ? snap.data()?.questions : source);
   }
   try {
     return bankSchema.parse(
       JSON.parse(
         await fs.readFile(
-          path.join(/* turbopackIgnore: true */ dir, "questions.json"),
+          path.join(
+            /* turbopackIgnore: true */ dir,
+            "question-banks",
+            `${bankId}.json`,
+          ),
           "utf8",
         ),
       ),
     );
   } catch (e) {
-    if ((e as NodeJS.ErrnoException).code === "ENOENT")
+    if (
+      (e as NodeJS.ErrnoException).code === "ENOENT" &&
+      bankId === "ace-practice-1"
+    )
       return bankSchema.parse(source);
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return [];
     throw e;
   }
 }
-export async function saveQuestions(q: Question[]) {
+export async function saveQuestions(q: Question[], bankId = "ace-practice-1") {
   const data = bankSchema.parse(q);
   if (cloud) {
-    await db().doc("config/question-bank").set({ questions: data });
+    await db().doc(bankDocument(bankId)).set({ questions: data });
     return;
   }
-  await fs.mkdir(dir, { recursive: true });
+  const bankDir = path.join(/* turbopackIgnore: true */ dir, "question-banks");
+  await fs.mkdir(bankDir, { recursive: true });
   const temp = path.join(
     /* turbopackIgnore: true */ dir,
     randomUUID() + ".tmp",
@@ -76,7 +125,7 @@ export async function saveQuestions(q: Question[]) {
   await fs.writeFile(temp, JSON.stringify(data));
   await fs.rename(
     temp,
-    path.join(/* turbopackIgnore: true */ dir, "questions.json"),
+    path.join(/* turbopackIgnore: true */ bankDir, `${bankId}.json`),
   );
 }
 export async function saveRecord(

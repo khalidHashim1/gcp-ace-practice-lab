@@ -25,9 +25,11 @@ export async function POST(r: Request) {
         sessionId: z.string().uuid(),
         answers: z.record(
           z.string(),
-          z.array(z.enum(["A", "B", "C", "D"])).max(4),
+          z.array(z.enum(["A", "B", "C", "D", "E"])).max(4),
         ),
-        flags: z.array(z.string()).max(81),
+        // Practice sessions can contain an entire bank; validation below also
+        // confirms every flag belongs to the session.
+        flags: z.array(z.string()).max(1000),
       })
       .safeParse(await readJson(r));
     if (!p.success) throw new Error("BAD_REQUEST: invalid answers");

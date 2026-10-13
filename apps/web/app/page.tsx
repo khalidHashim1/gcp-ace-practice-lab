@@ -190,7 +190,9 @@ export default function Home() {
     () => summarizeTopics(topics, bank, attempts),
     [attempts, bank, topics],
   );
-  const scoredTopics = topicAnalytics.filter((item) => item.percentage !== null);
+  const scoredTopics = topicAnalytics.filter(
+    (item) => item.percentage !== null,
+  );
   const strongest = [...scoredTopics].sort(
     (a, b) => (b.percentage ?? 0) - (a.percentage ?? 0),
   )[0];
@@ -275,16 +277,57 @@ export default function Home() {
             <>
               <header className="hero dashboard-hero">
                 <div>
-                  <div className="eyebrow">GOOGLE CLOUD • ASSOCIATE CLOUD ENGINEER</div>
+                  <div className="eyebrow">
+                    GOOGLE CLOUD • ASSOCIATE CLOUD ENGINEER
+                  </div>
                   <h1>Practice with a clear path to confidence.</h1>
-                  <p className="muted">Build exam readiness with scenario-based questions, focused topic sessions, and honest performance insights.</p>
+                  <p className="muted">
+                    Build exam readiness with scenario-based questions, focused
+                    topic sessions, and honest performance insights.
+                  </p>
                 </div>
-                <div className="hero-orbit" aria-hidden="true"><span>ACE</span><small>ready</small></div>
+                <div className="hero-orbit" aria-hidden="true">
+                  <span>ACE</span>
+                  <small>ready</small>
+                </div>
               </header>
               <div className="grid metrics-grid">
-                <section className="card metric-card"><span className="metric-icon">◈</span><div><div className="muted">Question bank</div><div className="stat">{bank.length}</div><span>Scenario-based cloud decisions</span></div></section>
-                <section className="card metric-card"><span className="metric-icon">◔</span><div><div className="muted">Study coverage</div><div className="stat">{bank.length ? Math.round((studied / bank.length) * 100) : 0}%</div><progress value={studied} max={bank.length || 1} /><small className="muted">{studied} of {bank.length} explored</small></div></section>
-                <section className="card metric-card"><span className="metric-icon">✓</span><div><div className="muted">Completed attempts</div><div className="stat">{attempts.length}</div><span>{cloud ? "Synced to your account" : "Available in local development"}</span></div></section>
+                <section className="card metric-card">
+                  <span className="metric-icon">◈</span>
+                  <div>
+                    <div className="muted">Question bank</div>
+                    <div className="stat">{bank.length}</div>
+                    <span>Scenario-based cloud decisions</span>
+                  </div>
+                </section>
+                <section className="card metric-card">
+                  <span className="metric-icon">◔</span>
+                  <div>
+                    <div className="muted">Study coverage</div>
+                    <div className="stat">
+                      {bank.length
+                        ? Math.round((studied / bank.length) * 100)
+                        : 0}
+                      %
+                    </div>
+                    <progress value={studied} max={bank.length || 1} />
+                    <small className="muted">
+                      {studied} of {bank.length} explored
+                    </small>
+                  </div>
+                </section>
+                <section className="card metric-card">
+                  <span className="metric-icon">✓</span>
+                  <div>
+                    <div className="muted">Completed attempts</div>
+                    <div className="stat">{attempts.length}</div>
+                    <span>
+                      {cloud
+                        ? "Synced to your account"
+                        : "Available in local development"}
+                    </span>
+                  </div>
+                </section>
               </div>
               <div className="banner">
                 <strong>Transparent grading.</strong>{" "}
@@ -297,7 +340,8 @@ export default function Home() {
                   <div className="eyebrow">EXAM SIMULATION</div>
                   <h2>Full mock exam</h2>
                   <p className="muted">
-                    All {bank.length} questions · 120 minutes · randomized order
+                    60 questions · 120 minutes · randomized from {bank.length}{" "}
+                    questions
                   </p>
                 </div>
                 <button
@@ -308,7 +352,13 @@ export default function Home() {
                   Start mock exam <span aria-hidden="true">→</span>
                 </button>
               </div>
-              <div className="section-heading"><div><div className="eyebrow">FOCUSED PRACTICE</div><h2>Choose a topic</h2></div><span className="muted">Untimed · instant review</span></div>
+              <div className="section-heading">
+                <div>
+                  <div className="eyebrow">FOCUSED PRACTICE</div>
+                  <h2>Choose a topic</h2>
+                </div>
+                <span className="muted">Untimed · instant review</span>
+              </div>
               <div className="topics">
                 {topicAnalytics.map(({ topic, questions, percentage }) => (
                   <button
@@ -317,19 +367,56 @@ export default function Home() {
                     disabled={busy || (cloud && !user)}
                     onClick={() => start("practice", topic)}
                   >
-                    <span className="topic-icon" aria-hidden="true">{topic === "Compute" ? "◫" : topic === "Networking" ? "⌁" : topic === "Storage" ? "▣" : "◇"}</span>
+                    <span className="topic-icon" aria-hidden="true">
+                      {topic === "Compute"
+                        ? "◫"
+                        : topic === "Networking"
+                          ? "⌁"
+                          : topic === "Storage"
+                            ? "▣"
+                            : "◇"}
+                    </span>
                     <span className="topic-copy">
                       <strong>{topic}</strong>
                       <br />
                       <small className="muted">
-                        {questions} questions{percentage !== null ? ` · ${percentage}% verified score` : " · untimed"}
+                        {questions} questions
+                        {percentage !== null
+                          ? ` · ${percentage}% verified score`
+                          : " · untimed"}
                       </small>
                     </span>
                     <span aria-hidden="true">→</span>
                   </button>
                 ))}
               </div>
-              {attempts.length > 0 && <section className="insights card"><div><div className="eyebrow">YOUR INSIGHTS</div><h2>Keep your practice intentional.</h2></div><div className="insight-grid"><p><strong>Strongest</strong><br />{strongest ? `${strongest.topic} · ${strongest.percentage}%` : "Not enough graded data yet"}</p><p><strong>Practice next</strong><br />{weakest ? `${weakest.topic} · ${weakest.percentage}%` : "Complete a session to unlock suggestions"}</p><button onClick={() => setView("history")}>View attempt history →</button></div></section>}
+              {attempts.length > 0 && (
+                <section className="insights card">
+                  <div>
+                    <div className="eyebrow">YOUR INSIGHTS</div>
+                    <h2>Keep your practice intentional.</h2>
+                  </div>
+                  <div className="insight-grid">
+                    <p>
+                      <strong>Strongest</strong>
+                      <br />
+                      {strongest
+                        ? `${strongest.topic} · ${strongest.percentage}%`
+                        : "Not enough graded data yet"}
+                    </p>
+                    <p>
+                      <strong>Practice next</strong>
+                      <br />
+                      {weakest
+                        ? `${weakest.topic} · ${weakest.percentage}%`
+                        : "Complete a session to unlock suggestions"}
+                    </p>
+                    <button onClick={() => setView("history")}>
+                      View attempt history →
+                    </button>
+                  </div>
+                </section>
+              )}
               {cloud && !user && (
                 <p className="muted">
                   Sign in with Google to start and save your progress.
@@ -346,14 +433,25 @@ export default function Home() {
                     Question {index + 1} of {session.questions.length}
                   </h2>
                 </div>
-                <strong className={session.deadline ? "timer" : "timer untimed"}>
+                <strong
+                  className={session.deadline ? "timer" : "timer untimed"}
+                >
                   {session.deadline
                     ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")} remaining`
                     : "Untimed practice"}
                 </strong>
               </div>
-              <div className="progress-label"><span>{answeredCount} answered</span><span>{session.questions.length - answeredCount} remaining</span></div>
-              <progress value={answeredCount} max={session.questions.length} aria-label={`${answeredCount} of ${session.questions.length} questions answered`} />
+              <div className="progress-label">
+                <span>{answeredCount} answered</span>
+                <span>
+                  {session.questions.length - answeredCount} remaining
+                </span>
+              </div>
+              <progress
+                value={answeredCount}
+                max={session.questions.length}
+                aria-label={`${answeredCount} of ${session.questions.length} questions answered`}
+              />
               <section className="card exam-card">
                 <div className="row spread">
                   <span className="muted">
@@ -379,7 +477,10 @@ export default function Home() {
                 {q.options.map((o) => (
                   <button
                     aria-pressed={(answers[q.id] ?? []).includes(o.id)}
-                    className={"option " + ((answers[q.id] ?? []).includes(o.id) ? "selected" : "")}
+                    className={
+                      "option " +
+                      ((answers[q.id] ?? []).includes(o.id) ? "selected" : "")
+                    }
                     key={o.id}
                     onClick={() =>
                       setAnswers({
@@ -392,7 +493,8 @@ export default function Home() {
                       })
                     }
                   >
-                    <span className="option-letter">{o.id}</span><span>{o.text}</span>
+                    <span className="option-letter">{o.id}</span>
+                    <span>{o.text}</span>
                   </button>
                 ))}
                 <div className="row spread">
@@ -417,12 +519,19 @@ export default function Home() {
                   </button>
                 </div>
               </section>
-              <div className="navigator-label"><strong>Question navigator</strong><span className="muted">Answered · Flagged</span></div>
+              <div className="navigator-label">
+                <strong>Question navigator</strong>
+                <span className="muted">Answered · Flagged</span>
+              </div>
               <div className="numbers" aria-label="Question navigator">
                 {session.questions.map((item, i) => (
                   <button
                     aria-label={`Go to question ${i + 1}${flags.includes(item.id) ? ", flagged" : ""}`}
-                    className={(flags.includes(item.id) ? "flag " : "") + (i === index ? "selected" : "") + (answers[item.id]?.length ? " answered" : "")}
+                    className={
+                      (flags.includes(item.id) ? "flag " : "") +
+                      (i === index ? "selected" : "") +
+                      (answers[item.id]?.length ? " answered" : "")
+                    }
                     key={item.id}
                     onClick={() => setIndex(i)}
                   >
@@ -488,9 +597,29 @@ export default function Home() {
                 </p>
               </header>
               <div className="grid results-grid">
-                <section className="card score-card"><div className="score-ring"><strong>{result.percentage ?? "—"}</strong><span>{result.percentage === null ? "ungraded" : "%"}</span></div><p className="muted">Verified performance</p></section>
-                <section className="card"><div className="muted">Correct</div><div className="stat">{result.correct}</div><p className="muted">of {result.graded} verified questions</p></section>
-                <section className="card"><div className="muted">Completion</div><div className="stat">{result.review.filter((item) => item.selected.length).length}/{result.review.length}</div><p className="muted">questions answered</p></section>
+                <section className="card score-card">
+                  <div className="score-ring">
+                    <strong>{result.percentage ?? "—"}</strong>
+                    <span>{result.percentage === null ? "ungraded" : "%"}</span>
+                  </div>
+                  <p className="muted">Verified performance</p>
+                </section>
+                <section className="card">
+                  <div className="muted">Correct</div>
+                  <div className="stat">{result.correct}</div>
+                  <p className="muted">of {result.graded} verified questions</p>
+                </section>
+                <section className="card">
+                  <div className="muted">Completion</div>
+                  <div className="stat">
+                    {
+                      result.review.filter((item) => item.selected.length)
+                        .length
+                    }
+                    /{result.review.length}
+                  </div>
+                  <p className="muted">questions answered</p>
+                </section>
                 {Object.entries(result.topics).map(([t, s]) => (
                   <div className="card" key={t}>
                     <strong>{t}</strong>
@@ -535,7 +664,30 @@ export default function Home() {
                         {result.flags.includes(r.id) ? " · FLAGGED" : ""}
                       </div>
                       <p className="question">{item?.prompt}</p>
-                      <div className="review-options">{item?.options.map((o) => <p className={(r.selected.includes(o.id) ? "selected-answer " : "") + (r.correctOptionIds.includes(o.id) ? "correct-answer" : "")} key={o.id}><strong>{o.id}</strong><span>{o.text}</span>{r.selected.includes(o.id) && <small>Your answer</small>}{r.correctOptionIds.includes(o.id) && <small>Correct answer</small>}</p>)}</div>
+                      <div className="review-options">
+                        {item?.options.map((o) => (
+                          <p
+                            className={
+                              (r.selected.includes(o.id)
+                                ? "selected-answer "
+                                : "") +
+                              (r.correctOptionIds.includes(o.id)
+                                ? "correct-answer"
+                                : "")
+                            }
+                            key={o.id}
+                          >
+                            <strong>{o.id}</strong>
+                            <span>{o.text}</span>
+                            {r.selected.includes(o.id) && (
+                              <small>Your answer</small>
+                            )}
+                            {r.correctOptionIds.includes(o.id) && (
+                              <small>Correct answer</small>
+                            )}
+                          </p>
+                        ))}
+                      </div>
                       <p className="explanation">
                         {r.explanation ??
                           "No verified answer or explanation has been added for this question."}
@@ -623,7 +775,38 @@ export default function Home() {
         ACE Practice Lab · Independent study project · Not affiliated with
         Google · {cloud ? "Cloud mode" : "Local development mode"}
       </footer>
-      {confirmSubmit && session && <div className="dialog-backdrop" role="presentation"><section className="dialog" role="dialog" aria-modal="true" aria-labelledby="submit-title"><div className="eyebrow">READY TO SUBMIT?</div><h2 id="submit-title">Finish this attempt?</h2><p className="muted">You have answered {answeredCount} of {session.questions.length} questions. {session.questions.length - answeredCount ? `${session.questions.length - answeredCount} unanswered question${session.questions.length - answeredCount === 1 ? "" : "s"} will be submitted blank.` : "All questions have an answer."}</p><div className="row"><button onClick={() => setConfirmSubmit(false)}>Keep reviewing</button><button className="primary" disabled={busy} onClick={() => void submit()}>{busy ? "Submitting…" : "Submit & view results"}</button></div></section></div>}
+      {confirmSubmit && session && (
+        <div className="dialog-backdrop" role="presentation">
+          <section
+            className="dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="submit-title"
+          >
+            <div className="eyebrow">READY TO SUBMIT?</div>
+            <h2 id="submit-title">Finish this attempt?</h2>
+            <p className="muted">
+              You have answered {answeredCount} of {session.questions.length}{" "}
+              questions.{" "}
+              {session.questions.length - answeredCount
+                ? `${session.questions.length - answeredCount} unanswered question${session.questions.length - answeredCount === 1 ? "" : "s"} will be submitted blank.`
+                : "All questions have an answer."}
+            </p>
+            <div className="row">
+              <button onClick={() => setConfirmSubmit(false)}>
+                Keep reviewing
+              </button>
+              <button
+                className="primary"
+                disabled={busy}
+                onClick={() => void submit()}
+              >
+                {busy ? "Submitting…" : "Submit & view results"}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }

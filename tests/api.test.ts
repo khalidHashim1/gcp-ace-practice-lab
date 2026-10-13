@@ -62,7 +62,7 @@ describe("local API integration", () => {
   });
   it("starts, validates, submits and persists an ungraded mock", async () => {
     const session = await (await start(request({ mode: "mock" }))).json();
-    expect(session.questions).toHaveLength(81);
+    expect(session.questions).toHaveLength(60);
     expect(session.deadline).toBeGreaterThan(Date.now());
     expect(session.questions[0]).not.toHaveProperty("correctOptionIds");
     const bad = await submit(
@@ -80,7 +80,7 @@ describe("local API integration", () => {
     };
     const attempt = await (await submit(request(payload))).json();
     expect(attempt.percentage).toBeNull();
-    expect(attempt.ungraded).toBe(81);
+    expect(attempt.ungraded).toBe(60);
     const retry = await (
       await submit(request({ ...payload, answers: {} }))
     ).json();
@@ -134,6 +134,31 @@ describe("local API integration", () => {
     ).json();
     expect(result.percentage).toBe(100);
     expect(result.review[0].explanation).toBe(verified.explanation);
+  });
+  it("accepts option E when a five-option question is answered", async () => {
+    const original = await (
+      await getAdmin(new Request("http://localhost/api"))
+    ).json();
+    const fiveOption = {
+      ...original[51],
+      verification: "verified",
+      correctOptionIds: ["A", "E"],
+      explanation: "Integration fixture for a five-option question.",
+      references: ["https://docs.cloud.google.com/compute/docs"],
+    };
+    await putAdmin(request([fiveOption]));
+    const session = await (await start(request({ mode: "practice" }))).json();
+    const result = await (
+      await submit(
+        request({
+          sessionId: session.id,
+          answers: { [fiveOption.id]: ["A", "E"] },
+          flags: [],
+        }),
+      )
+    ).json();
+    expect(result.percentage).toBe(100);
+    await putAdmin(request(original));
   });
   it("rejects local authorization when serving production", async () => {
     const before = process.env.NODE_ENV;
