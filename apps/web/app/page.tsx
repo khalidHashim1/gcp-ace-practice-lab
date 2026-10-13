@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { initializeApp, getApps } from "@firebase/app";
 import {
   getAuth,
@@ -10,6 +10,7 @@ import {
 } from "@firebase/auth";
 import type { PublicQuestion } from "../lib/schema";
 import { toggleSelection, remainingSeconds } from "../lib/exam";
+import { summarizeTopics } from "../lib/analytics";
 type Review = {
   id: string;
   selected: string[];
@@ -54,7 +55,8 @@ export default function Home() {
     [isAdmin, setIsAdmin] = useState(false),
     [adminText, setAdminText] = useState(""),
     [notice, setNotice] = useState(""),
-    [seconds, setSeconds] = useState(0);
+    [seconds, setSeconds] = useState(0),
+    [confirmSubmit, setConfirmSubmit] = useState(false);
   const submitting = useRef(false);
   async function api(path: string, method = "GET", body?: unknown) {
     const token = user ? await user.getIdToken() : null;
@@ -141,6 +143,7 @@ export default function Home() {
       setAttempts((old) => [a, ...old.filter((v) => v.id !== a.id)]);
       setView("review");
       setSession(null);
+      setConfirmSubmit(false);
     });
     submitting.current = false;
   }
@@ -173,21 +176,40 @@ export default function Home() {
       setView("exam");
     });
   }
-  const topics = [...new Set(bank.map((q) => q.topic))];
+  const topics = useMemo(() => [...new Set(bank.map((q) => q.topic))], [bank]);
   const q = session?.questions[index];
+  const answeredCount = session
+    ? Object.values(answers).filter((selection) => selection.length).length
+    : 0;
   const studied = new Set(
     attempts.flatMap((a) =>
       a.review.filter((r) => r.selected.length).map((r) => r.id),
     ),
   ).size;
+  const topicAnalytics = useMemo(
+    () => summarizeTopics(topics, bank, attempts),
+    [attempts, bank, topics],
+  );
+  const scoredTopics = topicAnalytics.filter((item) => item.percentage !== null);
+  const strongest = [...scoredTopics].sort(
+    (a, b) => (b.percentage ?? 0) - (a.percentage ?? 0),
+  )[0];
+  const weakest = [...scoredTopics].sort(
+    (a, b) => (a.percentage ?? 0) - (b.percentage ?? 0),
+  )[0];
   return (
     <main className="shell">
-      <nav className="nav">
+      <nav className="nav" aria-label="Primary navigation">
         <div className="brand">
           <span>ACE</span> / Practice Lab
         </div>
         {["dashboard", "history"].map((v) => (
-          <button key={v} disabled={!!session} onClick={() => setView(v)}>
+          <button
+            className={view === v ? "nav-link active" : "nav-link"}
+            key={v}
+            disabled={!!session}
+            onClick={() => setView(v)}
+          >
             {v === "dashboard" ? "Dashboard" : "Attempt history"}
           </button>
         ))}
@@ -251,45 +273,18 @@ export default function Home() {
         <>
           {view === "dashboard" && (
             <>
-              <header className="hero">
-                <div className="eyebrow">
-                  GOOGLE CLOUD • ASSOCIATE CLOUD ENGINEER
+              <header className="hero dashboard-hero">
+                <div>
+                  <div className="eyebrow">GOOGLE CLOUD • ASSOCIATE CLOUD ENGINEER</div>
+                  <h1>Practice with a clear path to confidence.</h1>
+                  <p className="muted">Build exam readiness with scenario-based questions, focused topic sessions, and honest performance insights.</p>
                 </div>
-                <h1>
-                  Build confidence.
-                  <br />
-                  Practice with purpose.
-                </h1>
-                <p className="muted">
-                  Scenario-based learning, focused practice, and a clear view of
-                  your progress.
-                </p>
+                <div className="hero-orbit" aria-hidden="true"><span>ACE</span><small>ready</small></div>
               </header>
-              <div className="grid">
-                <section className="card">
-                  <div className="muted">Question bank</div>
-                  <div className="stat">{bank.length}</div>
-                  <span>Real-world cloud scenarios</span>
-                </section>
-                <section className="card">
-                  <div className="muted">Study coverage</div>
-                  <div className="stat">
-                    {bank.length
-                      ? Math.round((studied / bank.length) * 100)
-                      : 0}
-                    %
-                  </div>
-                  <progress value={studied} max={bank.length || 1} />
-                </section>
-                <section className="card">
-                  <div className="muted">Completed attempts</div>
-                  <div className="stat">{attempts.length}</div>
-                  <span>
-                    {cloud
-                      ? "Synced to your account"
-                      : "Saved locally on this server"}
-                  </span>
-                </section>
+              <div className="grid metrics-grid">
+                <section className="card metric-card"><span className="metric-icon">◈</span><div><div className="muted">Question bank</div><div className="stat">{bank.length}</div><span>Scenario-based cloud decisions</span></div></section>
+                <section className="card metric-card"><span className="metric-icon">◔</span><div><div className="muted">Study coverage</div><div className="stat">{bank.length ? Math.round((studied / bank.length) * 100) : 0}%</div><progress value={studied} max={bank.length || 1} /><small className="muted">{studied} of {bank.length} explored</small></div></section>
+                <section className="card metric-card"><span className="metric-icon">✓</span><div><div className="muted">Completed attempts</div><div className="stat">{attempts.length}</div><span>{cloud ? "Synced to your account" : "Available in local development"}</span></div></section>
               </div>
               <div className="banner">
                 <strong>Transparent grading.</strong>{" "}
@@ -297,8 +292,9 @@ export default function Home() {
                 verified answer keys. Questions without a verified key stay
                 ungraded; completion is tracked separately from score.
               </div>
-              <div className="card row spread">
+              <div className="mock-card">
                 <div>
+                  <div className="eyebrow">EXAM SIMULATION</div>
                   <h2>Full mock exam</h2>
                   <p className="muted">
                     All {bank.length} questions · 120 minutes · randomized order
@@ -309,30 +305,31 @@ export default function Home() {
                   disabled={busy || (cloud && !user)}
                   onClick={() => start("mock")}
                 >
-                  Start timed exam
+                  Start mock exam <span aria-hidden="true">→</span>
                 </button>
               </div>
-              <h2>Practice by topic</h2>
+              <div className="section-heading"><div><div className="eyebrow">FOCUSED PRACTICE</div><h2>Choose a topic</h2></div><span className="muted">Untimed · instant review</span></div>
               <div className="topics">
-                {topics.map((t) => (
+                {topicAnalytics.map(({ topic, questions, percentage }) => (
                   <button
                     className="topic"
-                    key={t}
+                    key={topic}
                     disabled={busy || (cloud && !user)}
-                    onClick={() => start("practice", t)}
+                    onClick={() => start("practice", topic)}
                   >
-                    <span>
-                      {t}
+                    <span className="topic-icon" aria-hidden="true">{topic === "Compute" ? "◫" : topic === "Networking" ? "⌁" : topic === "Storage" ? "▣" : "◇"}</span>
+                    <span className="topic-copy">
+                      <strong>{topic}</strong>
                       <br />
                       <small className="muted">
-                        {bank.filter((q) => q.topic === t).length} questions ·
-                        untimed
+                        {questions} questions{percentage !== null ? ` · ${percentage}% verified score` : " · untimed"}
                       </small>
                     </span>
-                    <span>→</span>
+                    <span aria-hidden="true">→</span>
                   </button>
                 ))}
               </div>
+              {attempts.length > 0 && <section className="insights card"><div><div className="eyebrow">YOUR INSIGHTS</div><h2>Keep your practice intentional.</h2></div><div className="insight-grid"><p><strong>Strongest</strong><br />{strongest ? `${strongest.topic} · ${strongest.percentage}%` : "Not enough graded data yet"}</p><p><strong>Practice next</strong><br />{weakest ? `${weakest.topic} · ${weakest.percentage}%` : "Complete a session to unlock suggestions"}</p><button onClick={() => setView("history")}>View attempt history →</button></div></section>}
               {cloud && !user && (
                 <p className="muted">
                   Sign in with Google to start and save your progress.
@@ -342,26 +339,22 @@ export default function Home() {
           )}
           {view === "exam" && session && q && (
             <>
-              <div className="hero row spread">
+              <div className="exam-header">
                 <div>
                   <div className="eyebrow">{q.topic}</div>
                   <h2>
                     Question {index + 1} of {session.questions.length}
                   </h2>
                 </div>
-                <strong>
+                <strong className={session.deadline ? "timer" : "timer untimed"}>
                   {session.deadline
                     ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")} remaining`
                     : "Untimed practice"}
                 </strong>
               </div>
-              <progress
-                value={
-                  Object.keys(answers).filter((k) => answers[k].length).length
-                }
-                max={session.questions.length}
-              />
-              <section className="card">
+              <div className="progress-label"><span>{answeredCount} answered</span><span>{session.questions.length - answeredCount} remaining</span></div>
+              <progress value={answeredCount} max={session.questions.length} aria-label={`${answeredCount} of ${session.questions.length} questions answered`} />
+              <section className="card exam-card">
                 <div className="row spread">
                   <span className="muted">
                     Select {q.selectionCount} answer
@@ -386,10 +379,7 @@ export default function Home() {
                 {q.options.map((o) => (
                   <button
                     aria-pressed={(answers[q.id] ?? []).includes(o.id)}
-                    className={
-                      "option " +
-                      ((answers[q.id] ?? []).includes(o.id) ? "selected" : "")
-                    }
+                    className={"option " + ((answers[q.id] ?? []).includes(o.id) ? "selected" : "")}
                     key={o.id}
                     onClick={() =>
                       setAnswers({
@@ -402,7 +392,7 @@ export default function Home() {
                       })
                     }
                   >
-                    <strong>{o.id}.</strong> {o.text}
+                    <span className="option-letter">{o.id}</span><span>{o.text}</span>
                   </button>
                 ))}
                 <div className="row spread">
@@ -421,27 +411,18 @@ export default function Home() {
                   <button
                     className="primary"
                     disabled={busy}
-                    onClick={() => {
-                      if (
-                        confirm(
-                          "Submit this attempt? Unanswered questions will be included.",
-                        )
-                      )
-                        void submit();
-                    }}
+                    onClick={() => setConfirmSubmit(true)}
                   >
                     {busy ? "Submitting…" : "Finish & review"}
                   </button>
                 </div>
               </section>
-              <div className="numbers">
+              <div className="navigator-label"><strong>Question navigator</strong><span className="muted">Answered · Flagged</span></div>
+              <div className="numbers" aria-label="Question navigator">
                 {session.questions.map((item, i) => (
                   <button
                     aria-label={`Go to question ${i + 1}${flags.includes(item.id) ? ", flagged" : ""}`}
-                    className={
-                      (flags.includes(item.id) ? "flag " : "") +
-                      (i === index ? "selected" : "")
-                    }
+                    className={(flags.includes(item.id) ? "flag " : "") + (i === index ? "selected" : "") + (answers[item.id]?.length ? " answered" : "")}
                     key={item.id}
                     onClick={() => setIndex(i)}
                   >
@@ -451,7 +432,7 @@ export default function Home() {
                   </button>
                 ))}
               </div>
-              <p className="muted">
+              <p className="muted exam-note">
                 Keep this tab open. Timed exams submit automatically at the
                 deadline.
               </p>
@@ -506,7 +487,10 @@ export default function Home() {
                     : ""}
                 </p>
               </header>
-              <div className="grid">
+              <div className="grid results-grid">
+                <section className="card score-card"><div className="score-ring"><strong>{result.percentage ?? "—"}</strong><span>{result.percentage === null ? "ungraded" : "%"}</span></div><p className="muted">Verified performance</p></section>
+                <section className="card"><div className="muted">Correct</div><div className="stat">{result.correct}</div><p className="muted">of {result.graded} verified questions</p></section>
+                <section className="card"><div className="muted">Completion</div><div className="stat">{result.review.filter((item) => item.selected.length).length}/{result.review.length}</div><p className="muted">questions answered</p></section>
                 {Object.entries(result.topics).map(([t, s]) => (
                   <div className="card" key={t}>
                     <strong>{t}</strong>
@@ -551,20 +535,8 @@ export default function Home() {
                         {result.flags.includes(r.id) ? " · FLAGGED" : ""}
                       </div>
                       <p className="question">{item?.prompt}</p>
-                      {item?.options.map((o) => (
-                        <p key={o.id}>
-                          <strong>
-                            {o.id}
-                            {r.selected.includes(o.id) ? " [selected]" : ""}
-                            {r.correctOptionIds.includes(o.id)
-                              ? " [correct]"
-                              : ""}
-                            .
-                          </strong>{" "}
-                          {o.text}
-                        </p>
-                      ))}
-                      <p className="muted">
+                      <div className="review-options">{item?.options.map((o) => <p className={(r.selected.includes(o.id) ? "selected-answer " : "") + (r.correctOptionIds.includes(o.id) ? "correct-answer" : "")} key={o.id}><strong>{o.id}</strong><span>{o.text}</span>{r.selected.includes(o.id) && <small>Your answer</small>}{r.correctOptionIds.includes(o.id) && <small>Correct answer</small>}</p>)}</div>
+                      <p className="explanation">
                         {r.explanation ??
                           "No verified answer or explanation has been added for this question."}
                       </p>
@@ -651,6 +623,7 @@ export default function Home() {
         ACE Practice Lab · Independent study project · Not affiliated with
         Google · {cloud ? "Cloud mode" : "Local development mode"}
       </footer>
+      {confirmSubmit && session && <div className="dialog-backdrop" role="presentation"><section className="dialog" role="dialog" aria-modal="true" aria-labelledby="submit-title"><div className="eyebrow">READY TO SUBMIT?</div><h2 id="submit-title">Finish this attempt?</h2><p className="muted">You have answered {answeredCount} of {session.questions.length} questions. {session.questions.length - answeredCount ? `${session.questions.length - answeredCount} unanswered question${session.questions.length - answeredCount === 1 ? "" : "s"} will be submitted blank.` : "All questions have an answer."}</p><div className="row"><button onClick={() => setConfirmSubmit(false)}>Keep reviewing</button><button className="primary" disabled={busy} onClick={() => void submit()}>{busy ? "Submitting…" : "Submit & view results"}</button></div></section></div>}
     </main>
   );
 }
