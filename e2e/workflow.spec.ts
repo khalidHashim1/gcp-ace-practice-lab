@@ -31,7 +31,9 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
     page.getByText("No verified incorrect answers", { exact: false }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Back to dashboard" }).click();
-  await page.getByRole("button", { name: "Attempt history" }).click();
+  await page
+    .getByRole("button", { name: "Attempt history", exact: true })
+    .click();
   await expect(page.locator(".option").first()).toBeVisible();
   await page.getByRole("button", { name: "Question admin" }).click();
   await expect(
