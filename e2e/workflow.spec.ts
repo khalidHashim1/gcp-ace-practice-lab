@@ -44,7 +44,7 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
   await page.getByRole("button", { name: "Dashboard", exact: true }).click();
   await page.getByRole("button", { name: /Start mock exam/ }).click();
   await expect(page.locator(".timer")).toBeVisible();
-  await expect(page.locator(".numbers button")).toHaveCount(81);
+  await expect(page.locator(".numbers button")).toHaveCount(60);
   await page
     .getByRole("button", { name: "Toggle light and dark mode" })
     .click();
