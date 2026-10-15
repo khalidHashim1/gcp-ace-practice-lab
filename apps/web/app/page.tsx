@@ -37,8 +37,17 @@ type Session = {
   questions: PublicQuestion[];
   deadline: number | null;
 };
+type ExamCatalogItem = {
+  id: string;
+  title: string;
+  description: string;
+  questionCount: number;
+  durationMinutes: number;
+  available: boolean;
+};
 export default function Home() {
   const [bank, setBank] = useState<PublicQuestion[]>([]),
+    [examCatalog, setExamCatalog] = useState<ExamCatalogItem[]>([]),
     [attempts, setAttempts] = useState<Attempt[]>([]),
     [view, setView] = useState("dashboard"),
     [session, setSession] = useState<Session | null>(null),
@@ -85,13 +94,18 @@ export default function Home() {
             setIsAdmin(Boolean(u && (await u.getIdTokenResult()).claims.admin));
           });
         } else setIsAdmin(true);
-        return fetch("/api/questions");
+        return Promise.all([fetch("/api/questions"), fetch("/api/exams")]);
       })
-      .then((r) => {
-        if (!r.ok) throw new Error("Could not load questions");
-        return r.json();
+      .then(async ([questionResponse, examResponse]) => {
+        if (!questionResponse.ok) throw new Error("Could not load questions");
+        if (!examResponse.ok) throw new Error("Could not load exam catalog");
+        const [loadedBank, loadedExams] = await Promise.all([
+          questionResponse.json(),
+          examResponse.json(),
+        ]);
+        setBank(loadedBank);
+        setExamCatalog(loadedExams);
       })
-      .then(setBank)
       .catch((e) => setError(e.message))
       .finally(() => setReady(true));
     document.documentElement.dataset.theme =
@@ -165,9 +179,13 @@ export default function Home() {
     )
       void submit();
   });
-  async function start(mode: "practice" | "mock", topic?: string) {
+  async function start(
+    mode: "practice" | "mock",
+    topic?: string,
+    examId?: string,
+  ) {
     await run(async () => {
-      const s = await api("exams", "POST", { mode, topic });
+      const s = await api("exams", "POST", { mode, topic, examId });
       setSession(s);
       setSeconds(s.deadline ? remainingSeconds(s.deadline, Date.now()) : 0);
       setAnswers({});
@@ -280,10 +298,10 @@ export default function Home() {
                   <div className="eyebrow">
                     GOOGLE CLOUD • ASSOCIATE CLOUD ENGINEER
                   </div>
-                  <h1>Practice with a clear path to confidence.</h1>
+                  <h1>Pass your cloud exam with confidence.</h1>
                   <p className="muted">
-                    Build exam readiness with scenario-based questions, focused
-                    topic sessions, and honest performance insights.
+                    Take realistic 60-question mock exams, drill the skills
+                    that matter, and make every study session count.
                   </p>
                 </div>
                 <div className="hero-orbit" aria-hidden="true">
@@ -335,23 +353,41 @@ export default function Home() {
                 verified answer keys. Questions without a verified key stay
                 ungraded; completion is tracked separately from score.
               </div>
-              <div className="mock-card">
-                <div>
-                  <div className="eyebrow">EXAM SIMULATION</div>
-                  <h2>Full mock exam</h2>
-                  <p className="muted">
-                    60 questions · 120 minutes · randomized from {bank.length}{" "}
-                    questions
-                  </p>
+              <section className="exam-library" aria-labelledby="exam-library-title">
+                <div className="section-heading">
+                  <div>
+                    <div className="eyebrow">EXAM SIMULATION</div>
+                    <h2 id="exam-library-title">Mock exam library</h2>
+                  </div>
+                  <span className="muted">Every exam · 60 questions · 120 minutes</span>
                 </div>
-                <button
-                  className="primary"
-                  disabled={busy || (cloud && !user)}
-                  onClick={() => start("mock")}
-                >
-                  Start mock exam <span aria-hidden="true">→</span>
-                </button>
-              </div>
+                <div className="exam-grid">
+                  {examCatalog.map((exam, position) => (
+                    <article
+                      className={position === 0 ? "exam-tile featured-exam" : "exam-tile"}
+                      key={exam.id}
+                    >
+                      <div className="exam-number">{String(position + 1).padStart(2, "0")}</div>
+                      <div className="eyebrow">
+                        {position === 0 ? "RECOMMENDED FIRST" : "FULL SIMULATION"}
+                      </div>
+                      <h3>{exam.title}</h3>
+                      <p>{exam.description}</p>
+                      <div className="exam-details">
+                        <span>{exam.questionCount} questions</span>
+                        <span>{exam.durationMinutes} minutes</span>
+                      </div>
+                      <button
+                        className={position === 0 ? "primary" : "exam-start"}
+                        disabled={busy || !exam.available || (cloud && !user)}
+                        onClick={() => start("mock", undefined, exam.id)}
+                      >
+                        {exam.available ? "Start exam" : "Exam bank unavailable"} <span aria-hidden="true">→</span>
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              </section>
               <div className="section-heading">
                 <div>
                   <div className="eyebrow">FOCUSED PRACTICE</div>

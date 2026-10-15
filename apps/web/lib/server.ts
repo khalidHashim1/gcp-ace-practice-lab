@@ -16,9 +16,27 @@ export const cloud = process.env.DATA_MODE === "firestore";
 const defaultExams: Exam[] = [
   {
     id: "ace-practice-1",
-    title: "ACE practice exam 1",
+    title: "Practice exam 01",
     description:
-      "A randomized, full-length Associate Cloud Engineer simulation.",
+      "A full-length Associate Cloud Engineer simulation with a fresh randomized question mix.",
+    questionBankId: "ace-practice-1",
+    questionCount: 60,
+    durationMinutes: 120,
+  },
+  {
+    id: "ace-practice-2",
+    title: "Practice exam 02",
+    description:
+      "A second full-length Associate Cloud Engineer simulation with a fresh randomized question mix.",
+    questionBankId: "ace-practice-1",
+    questionCount: 60,
+    durationMinutes: 120,
+  },
+  {
+    id: "ace-practice-3",
+    title: "Practice exam 03",
+    description:
+      "A third full-length Associate Cloud Engineer simulation with a fresh randomized question mix.",
     questionBankId: "ace-practice-1",
     questionCount: 60,
     durationMinutes: 120,
