@@ -7,6 +7,11 @@ import {
   POST as submit,
 } from "../apps/web/app/api/attempts/route";
 import {
+  GET as getSavedSession,
+  PATCH as pause,
+  POST as resume,
+} from "../apps/web/app/api/sessions/route";
+import {
   GET as getAdmin,
   PUT as putAdmin,
 } from "../apps/web/app/api/admin/route";
@@ -89,6 +94,35 @@ describe("local API integration", () => {
       await history(new Request("http://localhost/api"))
     ).json();
     expect(saved.some((a: { id: string }) => a.id === session.id)).toBe(true);
+  });
+  it("pauses and resumes an exam without submitting it", async () => {
+    const session = await (await start(request({ mode: "mock" }))).json();
+    const paused = await (
+      await pause(
+        new Request("http://localhost/api", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sessionId: session.id,
+            answers: { [session.questions[0].id]: ["A"] },
+            flags: [session.questions[1].id],
+            index: 1,
+          }),
+        }),
+      )
+    ).json();
+    expect(paused.paused).toBe(true);
+    expect(paused.questions).toHaveLength(60);
+    expect(paused.questions[0]).not.toHaveProperty("correctOptionIds");
+    expect(paused.answers).toEqual({ [session.questions[0].id]: ["A"] });
+    expect(paused.pausedRemainingSeconds).toBeGreaterThan(0);
+    expect(
+      await (await getSavedSession(new Request("http://localhost/api"))).json(),
+    ).toMatchObject({ id: session.id, paused: true });
+    const resumed = await (await resume(request({ sessionId: session.id }))).json();
+    expect(resumed.deadline).toBeGreaterThan(Date.now());
+    expect(resumed.answers).toEqual(paused.answers);
+    expect(resumed.flags).toEqual(paused.flags);
   });
   it("rejects unknown sessions and empty topics", async () => {
     expect(

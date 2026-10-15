@@ -5,6 +5,8 @@ import {
   identity,
   history,
   getRecord,
+  saveRecord,
+  deleteRecord,
   finalizeAttempt,
   failure,
 } from "../../../lib/server";
@@ -63,9 +65,16 @@ export async function POST(r: Request) {
       })),
       ...score(qs, late ? {} : p.data.answers),
     };
-    return Response.json(
-      await finalizeAttempt(user.uid, p.data.sessionId, result),
-    );
+    const attempt = await finalizeAttempt(user.uid, p.data.sessionId, result);
+    await saveRecord(user.uid, "sessions", p.data.sessionId, {
+      ...session,
+      status: "submitted",
+      updatedAt: Date.now(),
+    });
+    const current = await getRecord(user.uid, "state", "current-session");
+    if (current?.sessionId === p.data.sessionId)
+      await deleteRecord(user.uid, "state", "current-session");
+    return Response.json(attempt);
   } catch (e) {
     return failure(e);
   }

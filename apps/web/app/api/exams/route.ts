@@ -50,7 +50,13 @@ export async function POST(r: Request) {
       questions: sessionQuestions,
       deadline,
       startedAt: Date.now(),
+      updatedAt: Date.now(),
+      status: "active",
+      answers: {},
+      flags: [],
+      index: 0,
     });
+    await saveRecord(user.uid, "state", "current-session", { sessionId: id });
     return Response.json({
       id,
       questions: sessionQuestions.map(publicQuestion),

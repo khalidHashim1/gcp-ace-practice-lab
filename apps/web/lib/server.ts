@@ -181,6 +181,19 @@ export async function getRecord(uid: string, collection: string, id: string) {
     throw e;
   }
 }
+export async function deleteRecord(uid: string, collection: string, id: string) {
+  if (cloud) {
+    await db().doc(`users/${uid}/${collection}/${id}`).delete();
+    return;
+  }
+  try {
+    await fs.unlink(
+      path.join(/* turbopackIgnore: true */ dir, uid, collection, id + ".json"),
+    );
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
+  }
+}
 export async function history(uid: string) {
   if (cloud) {
     const s = await db()

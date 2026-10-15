@@ -37,6 +37,13 @@ type Session = {
   questions: PublicQuestion[];
   deadline: number | null;
 };
+type ResumableSession = Session & {
+  answers: Record<string, string[]>;
+  flags: string[];
+  index: number;
+  paused: boolean;
+  pausedRemainingSeconds: number | null;
+};
 type ExamCatalogItem = {
   id: string;
   title: string;
@@ -52,6 +59,7 @@ export default function Home() {
     [attempts, setAttempts] = useState<Attempt[]>([]),
     [view, setView] = useState("dashboard"),
     [session, setSession] = useState<Session | null>(null),
+    [savedSession, setSavedSession] = useState<ResumableSession | null>(null),
     [answers, setAnswers] = useState<Record<string, string[]>>({}),
     [flags, setFlags] = useState<string[]>([]),
     [index, setIndex] = useState(0),
@@ -125,6 +133,11 @@ export default function Home() {
         });
         if (!r.ok) throw new Error("Could not load history");
         if (active) setAttempts(await r.json());
+        const saved = await fetch("/api/sessions", {
+          headers: token ? { Authorization: "Bearer " + token } : {},
+        });
+        if (!saved.ok) throw new Error("Could not load saved exam");
+        if (active) setSavedSession(await saved.json());
       } catch (e) {
         if (active) setError(e instanceof Error ? e.message : "History error");
       }
@@ -159,6 +172,7 @@ export default function Home() {
       setAttempts((old) => [a, ...old.filter((v) => v.id !== a.id)]);
       setView("review");
       setSession(null);
+      setSavedSession(null);
       setConfirmSubmit(false);
     });
     submitting.current = false;
@@ -189,10 +203,42 @@ export default function Home() {
     await run(async () => {
       const s = await api("exams", "POST", { mode, topic, examId });
       setSession(s);
+      setSavedSession(null);
       setSeconds(s.deadline ? remainingSeconds(s.deadline, Date.now()) : 0);
       setAnswers({});
       setFlags([]);
       setIndex(0);
+      setView("exam");
+    });
+  }
+  async function pause() {
+    if (!session) return;
+    await run(async () => {
+      const saved = await api("sessions", "PATCH", {
+        sessionId: session.id,
+        answers,
+        flags,
+        index,
+      });
+      setSavedSession(saved);
+      setSession(null);
+      setConfirmSubmit(false);
+      setView("dashboard");
+      setNotice("Exam paused. Your answers, flags, position, and remaining time are saved.");
+    });
+  }
+  async function resume() {
+    if (!savedSession) return;
+    await run(async () => {
+      const resumed = await api("sessions", "POST", {
+        sessionId: savedSession.id,
+      });
+      setSession(resumed);
+      setAnswers(resumed.answers);
+      setFlags(resumed.flags);
+      setIndex(resumed.index);
+      setSeconds(resumed.deadline ? remainingSeconds(resumed.deadline, Date.now()) : 0);
+      setSavedSession(null);
       setView("exam");
     });
   }
@@ -416,6 +462,25 @@ export default function Home() {
                   ))}
                 </div>
               </section>
+              {savedSession && (
+                <section className="card saved-exam" aria-labelledby="saved-exam-title">
+                  <div>
+                    <div className="eyebrow">SAVED EXAM</div>
+                    <h2 id="saved-exam-title">Ready when you are.</h2>
+                    <p className="muted">
+                      {Object.values(savedSession.answers).filter((answer) => answer.length).length} of {savedSession.questions.length} answered
+                      {savedSession.pausedRemainingSeconds !== null
+                        ? ` · ${Math.ceil(savedSession.pausedRemainingSeconds / 60)} minutes remaining`
+                        : savedSession.deadline
+                          ? " · timer resumes when you continue"
+                          : " · untimed practice"}
+                    </p>
+                  </div>
+                  <button className="primary" disabled={busy} onClick={() => void resume()}>
+                    Resume exam →
+                  </button>
+                </section>
+              )}
               <div className="section-heading">
                 <div>
                   <div className="eyebrow">FOCUSED PRACTICE</div>
@@ -575,6 +640,12 @@ export default function Home() {
                     Next
                   </button>
                   <button
+                    disabled={busy}
+                    onClick={() => void pause()}
+                  >
+                    {busy ? "Saving…" : "Pause & save"}
+                  </button>
+                  <button
                     className="primary"
                     disabled={busy}
                     onClick={() => setConfirmSubmit(true)}
@@ -606,8 +677,8 @@ export default function Home() {
                 ))}
               </div>
               <p className="muted exam-note">
-                Keep this tab open. Timed exams submit automatically at the
-                deadline.
+                Pause & save stops the timer and lets you continue later. Timed
+                exams submit automatically when active time reaches the deadline.
               </p>
             </>
           )}

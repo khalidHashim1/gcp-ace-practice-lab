@@ -33,6 +33,9 @@ vi.mock("firebase-admin/firestore", () => ({
       set: async (data: object) => {
         state.records.set(path, data);
       },
+      delete: async () => {
+        state.records.delete(path);
+      },
     }),
     collection: (path: string) => {
       const query = {
