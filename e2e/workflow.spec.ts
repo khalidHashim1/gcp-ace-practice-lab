@@ -3,7 +3,7 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
   await page.goto("/");
   await expect(
     page.getByRole("heading", {
-      name: "Practice with a clear path to confidence.",
+      name: "Pass your cloud exam with confidence.",
     }),
   ).toBeVisible();
   await page.getByRole("button", { name: /Networking/ }).click();
@@ -40,9 +40,11 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
     page.getByRole("heading", { name: "Question management" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Validate & save" }).click();
-  await expect(page.getByText("Saved 81 validated questions.")).toBeVisible();
+  await expect(
+    page.getByText("Saved 81 validated questions to this bank."),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Dashboard", exact: true }).click();
-  await page.getByRole("button", { name: /Start mock exam/ }).click();
+  await page.getByRole("button", { name: /Start exam/ }).first().click();
   await expect(page.locator(".timer")).toBeVisible();
   await expect(page.locator(".numbers button")).toHaveCount(60);
   await page

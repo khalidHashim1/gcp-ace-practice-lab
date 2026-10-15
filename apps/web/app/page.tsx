@@ -41,6 +41,7 @@ type ExamCatalogItem = {
   id: string;
   title: string;
   description: string;
+  questionBankId: string;
   questionCount: number;
   durationMinutes: number;
   available: boolean;
@@ -62,6 +63,7 @@ export default function Home() {
     [cloud, setCloud] = useState(false),
     [user, setUser] = useState<User | null>(null),
     [isAdmin, setIsAdmin] = useState(false),
+    [adminBankId, setAdminBankId] = useState("ace-practice-1"),
     [adminText, setAdminText] = useState(""),
     [notice, setNotice] = useState(""),
     [seconds, setSeconds] = useState(0),
@@ -217,6 +219,14 @@ export default function Home() {
   const weakest = [...scoredTopics].sort(
     (a, b) => (a.percentage ?? 0) - (b.percentage ?? 0),
   )[0];
+  const adminBanks = useMemo(
+    () => [
+      ...new Map(
+        examCatalog.map((exam) => [exam.questionBankId, exam]),
+      ).values(),
+    ],
+    [examCatalog],
+  );
   return (
     <main className="shell">
       <nav className="nav" aria-label="Primary navigation">
@@ -238,7 +248,11 @@ export default function Home() {
             disabled={!!session}
             onClick={() =>
               run(async () => {
-                setAdminText(JSON.stringify(await api("admin"), null, 2));
+                const bankId = "ace-practice-1";
+                setAdminBankId(bankId);
+                setAdminText(
+                  JSON.stringify(await api(`admin?bankId=${bankId}`), null, 2),
+                );
                 setView("admin");
               })
             }
@@ -300,8 +314,8 @@ export default function Home() {
                   </div>
                   <h1>Pass your cloud exam with confidence.</h1>
                   <p className="muted">
-                    Take realistic 60-question mock exams, drill the skills
-                    that matter, and make every study session count.
+                    Take realistic 60-question mock exams, drill the skills that
+                    matter, and make every study session count.
                   </p>
                 </div>
                 <div className="hero-orbit" aria-hidden="true">
@@ -353,23 +367,34 @@ export default function Home() {
                 verified answer keys. Questions without a verified key stay
                 ungraded; completion is tracked separately from score.
               </div>
-              <section className="exam-library" aria-labelledby="exam-library-title">
+              <section
+                className="exam-library"
+                aria-labelledby="exam-library-title"
+              >
                 <div className="section-heading">
                   <div>
                     <div className="eyebrow">EXAM SIMULATION</div>
                     <h2 id="exam-library-title">Mock exam library</h2>
                   </div>
-                  <span className="muted">Every exam · 60 questions · 120 minutes</span>
+                  <span className="muted">
+                    Every exam · 60 questions · 120 minutes
+                  </span>
                 </div>
                 <div className="exam-grid">
                   {examCatalog.map((exam, position) => (
                     <article
-                      className={position === 0 ? "exam-tile featured-exam" : "exam-tile"}
+                      className={
+                        position === 0 ? "exam-tile featured-exam" : "exam-tile"
+                      }
                       key={exam.id}
                     >
-                      <div className="exam-number">{String(position + 1).padStart(2, "0")}</div>
+                      <div className="exam-number">
+                        {String(position + 1).padStart(2, "0")}
+                      </div>
                       <div className="eyebrow">
-                        {position === 0 ? "RECOMMENDED FIRST" : "FULL SIMULATION"}
+                        {position === 0
+                          ? "RECOMMENDED FIRST"
+                          : "FULL SIMULATION"}
                       </div>
                       <h3>{exam.title}</h3>
                       <p>{exam.description}</p>
@@ -382,7 +407,10 @@ export default function Home() {
                         disabled={busy || !exam.available || (cloud && !user)}
                         onClick={() => start("mock", undefined, exam.id)}
                       >
-                        {exam.available ? "Start exam" : "Exam bank unavailable"} <span aria-hidden="true">→</span>
+                        {exam.available
+                          ? "Start exam"
+                          : "Exam bank unavailable"}{" "}
+                        <span aria-hidden="true">→</span>
                       </button>
                     </article>
                   ))}
@@ -754,6 +782,32 @@ export default function Home() {
                   ? "Admin claim verified on the server."
                   : "Local development: admin enabled. Production API rejects local mode."}
               </div>
+              <label htmlFor="question-bank-select">Question bank</label>
+              <select
+                id="question-bank-select"
+                value={adminBankId}
+                onChange={(event) =>
+                  run(async () => {
+                    const bankId = event.target.value;
+                    setAdminBankId(bankId);
+                    setAdminText(
+                      JSON.stringify(
+                        await api(`admin?bankId=${encodeURIComponent(bankId)}`),
+                        null,
+                        2,
+                      ),
+                    );
+                  })
+                }
+              >
+                {adminBanks.map((exam) => (
+                  <option key={exam.questionBankId} value={exam.questionBankId}>
+                    {exam.questionBankId === "ace-practice-1"
+                      ? "Exam 1 question bank"
+                      : `${exam.title} question pool`}
+                  </option>
+                ))}
+              </select>
               <label htmlFor="bank">Question bank JSON</label>
               <textarea
                 id="bank"
@@ -790,13 +844,15 @@ export default function Home() {
                   disabled={busy}
                   onClick={() =>
                     run(async () => {
-                      const saved = await api(
-                        "admin",
-                        "PUT",
-                        JSON.parse(adminText),
+                      const saved = await api("admin", "PUT", {
+                        bankId: adminBankId,
+                        questions: JSON.parse(adminText),
+                      });
+                      if (adminBankId === "ace-practice-1")
+                        setBank(await api("questions"));
+                      setNotice(
+                        `Saved ${saved.saved} validated questions to this bank.`,
                       );
-                      setBank(await api("questions"));
-                      setNotice(`Saved ${saved.saved} validated questions.`);
                     })
                   }
                 >

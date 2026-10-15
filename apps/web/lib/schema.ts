@@ -73,14 +73,32 @@ export const bankSchema = z
     if (new Set(qs.map((q) => q.id)).size !== qs.length)
       ctx.addIssue({ code: "custom", message: "Duplicate IDs" });
   });
-export const examSchema = z.object({
-  id: z.string().regex(/^[a-z][a-z0-9-]*$/),
-  title: z.string().min(1).max(80),
-  description: z.string().min(1).max(240),
-  questionBankId: z.string().regex(/^[a-z][a-z0-9-]*$/),
-  questionCount: z.number().int().min(1).max(60),
-  durationMinutes: z.number().int().min(1).max(240),
-});
+export const examSchema = z
+  .object({
+    id: z.string().regex(/^[a-z][a-z0-9-]*$/),
+    title: z.string().min(1).max(80),
+    description: z.string().min(1).max(240),
+    questionBankId: z.string().regex(/^[a-z][a-z0-9-]*$/),
+    questionCount: z.number().int().min(1).max(60),
+    durationMinutes: z.number().int().min(1).max(240),
+    // Published exams are immutable assignments, not random draws from a pool.
+    questionIds: z
+      .array(z.string().regex(/^[a-z][a-z0-9]*-\d{3}$/))
+      .min(1)
+      .max(60),
+  })
+  .superRefine((exam, ctx) => {
+    if (exam.questionIds.length !== exam.questionCount)
+      ctx.addIssue({
+        code: "custom",
+        message: "Exam must assign exactly questionCount questions",
+      });
+    if (new Set(exam.questionIds).size !== exam.questionIds.length)
+      ctx.addIssue({
+        code: "custom",
+        message: "Exam cannot assign a question more than once",
+      });
+  });
 export const examCatalogSchema = z.array(examSchema).min(1);
 export type Question = z.infer<typeof questionSchema>;
 export type Exam = z.infer<typeof examSchema>;

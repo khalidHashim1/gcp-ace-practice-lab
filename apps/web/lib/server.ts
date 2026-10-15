@@ -13,33 +13,21 @@ import {
   type Question,
 } from "./schema";
 export const cloud = process.env.DATA_MODE === "firestore";
+function ids(prefix: string, first: number, count = 60) {
+  return Array.from(
+    { length: count },
+    (_, offset) => `${prefix}-${String(first + offset).padStart(3, "0")}`,
+  );
+}
 const defaultExams: Exam[] = [
   {
     id: "ace-practice-1",
     title: "Practice exam 01",
-    description:
-      "A full-length Associate Cloud Engineer simulation with a fresh randomized question mix.",
+    description: "A fixed, full-length Associate Cloud Engineer simulation.",
     questionBankId: "ace-practice-1",
     questionCount: 60,
     durationMinutes: 120,
-  },
-  {
-    id: "ace-practice-2",
-    title: "Practice exam 02",
-    description:
-      "A second full-length Associate Cloud Engineer simulation with a fresh randomized question mix.",
-    questionBankId: "ace-practice-1",
-    questionCount: 60,
-    durationMinutes: 120,
-  },
-  {
-    id: "ace-practice-3",
-    title: "Practice exam 03",
-    description:
-      "A third full-length Associate Cloud Engineer simulation with a fresh randomized question mix.",
-    questionBankId: "ace-practice-1",
-    questionCount: 60,
-    durationMinutes: 120,
+    questionIds: ids("ace", 1),
   },
 ];
 function requireSafeMode() {
@@ -145,6 +133,14 @@ export async function saveQuestions(q: Question[], bankId = "ace-practice-1") {
     temp,
     path.join(/* turbopackIgnore: true */ bankDir, `${bankId}.json`),
   );
+}
+export async function questionsForExam(exam: Exam): Promise<Question[]> {
+  const bank = await questions(exam.questionBankId);
+  const byId = new Map(bank.map((question) => [question.id, question]));
+  const assigned = exam.questionIds.map((id) => byId.get(id));
+  if (assigned.some((question) => !question))
+    throw new Error("BAD_REQUEST: exam bank assignment is incomplete");
+  return assigned as Question[];
 }
 export async function saveRecord(
   uid: string,

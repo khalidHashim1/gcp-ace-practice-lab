@@ -6,6 +6,7 @@ import {
   exams,
   identity,
   questions,
+  questionsForExam,
   saveRecord,
   failure,
 } from "../../../lib/server";
@@ -26,18 +27,18 @@ export async function POST(r: Request) {
       (item) => item.id === (p.data.examId ?? "ace-practice-1"),
     );
     if (!exam) throw new Error("BAD_REQUEST: unknown exam");
-    const qs = (await questions(exam.questionBankId)).filter(
-      (q) => !p.data.topic || q.topic === p.data.topic,
-    );
+    const qs =
+      p.data.mode === "mock"
+        ? await questionsForExam(exam)
+        : (await questions(exam.questionBankId)).filter(
+            (q) => !p.data.topic || q.topic === p.data.topic,
+          );
     if (!qs.length) throw new Error("BAD_REQUEST: empty topic");
     const shuffled = qs
       .map((q) => ({ q, n: Math.random() }))
       .sort((a, b) => a.n - b.n)
       .map((x) => x.q);
-    const sessionQuestions =
-      p.data.mode === "mock" ? shuffled.slice(0, exam.questionCount) : shuffled;
-    if (p.data.mode === "mock" && sessionQuestions.length < exam.questionCount)
-      throw new Error("BAD_REQUEST: exam bank is not ready");
+    const sessionQuestions = p.data.mode === "mock" ? shuffled : shuffled;
     const id = randomUUID();
     const deadline =
       p.data.mode === "mock"
@@ -65,9 +66,12 @@ export async function GET() {
     const payload = await Promise.all(
       catalog.map(async (exam) => {
         const bank = await questions(exam.questionBankId);
+        const available = exam.questionIds.every((id) =>
+          bank.some((question) => question.id === id),
+        );
         return {
           ...exam,
-          available: bank.length >= exam.questionCount,
+          available,
           totalQuestions: bank.length,
           verifiedQuestions: bank.filter((q) => q.verification === "verified")
             .length,
