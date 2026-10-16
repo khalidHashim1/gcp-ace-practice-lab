@@ -7,11 +7,11 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
     }),
   ).toBeVisible();
   await page.getByRole("button", { name: /Review mode/ }).click();
-  await page.getByRole("button", { name: /Networking/ }).click();
+  await page.getByRole("button", { name: /Start review/ }).first().click();
   await expect(page.getByText(/Select 1 answer/)).toBeVisible();
   await page.locator(".option").first().click();
   await page.getByRole("button", { name: "Check answer", exact: true }).click();
-  await expect(page.getByText("Not yet verified", { exact: true })).toBeVisible();
+  await expect(page.getByText("ANSWER REVIEW", { exact: true })).toBeVisible();
   await page
     .getByRole("button", { name: "Flag for review", exact: true })
     .click();
@@ -48,7 +48,7 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
   ).toBeVisible();
   await page.getByRole("button", { name: "Dashboard", exact: true }).click();
   await page.getByRole("button", { name: /Timed mode/ }).click();
-  await page.getByRole("button", { name: /Start exam/ }).first().click();
+  await page.getByRole("button", { name: /Start timed exam/ }).first().click();
   await expect(page.locator(".timer")).toBeVisible();
   await expect(page.locator(".numbers button")).toHaveCount(60);
   await page

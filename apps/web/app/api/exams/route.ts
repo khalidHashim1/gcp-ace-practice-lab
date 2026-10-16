@@ -28,8 +28,9 @@ export async function POST(r: Request) {
     );
     if (!exam) throw new Error("BAD_REQUEST: unknown exam");
     const timed = p.data.mode === "timed" || p.data.mode === "mock";
+    const usesExamSet = timed || p.data.mode === "review";
     const qs =
-      timed
+      usesExamSet
         ? await questionsForExam(exam)
         : (await questions(exam.questionBankId)).filter(
             (q) => !p.data.topic || q.topic === p.data.topic,

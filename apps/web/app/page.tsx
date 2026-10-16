@@ -447,17 +447,23 @@ export default function Home() {
                   <span>60 questions · 120 minutes · exam simulation</span>
                 </button>
               </section>
-              {dashboardMode === "timed" && <section
+              <section
                 className="exam-library"
                 aria-labelledby="exam-library-title"
               >
                 <div className="section-heading">
                   <div>
-                    <div className="eyebrow">EXAM SIMULATION</div>
-                    <h2 id="exam-library-title">Mock exam library</h2>
+                    <div className="eyebrow">
+                      {dashboardMode === "timed" ? "EXAM SIMULATION" : "REVIEW MODE"}
+                    </div>
+                    <h2 id="exam-library-title">
+                      {dashboardMode === "timed" ? "Timed exam library" : "Review exam library"}
+                    </h2>
                   </div>
                   <span className="muted">
-                    Every exam · 60 questions · 120 minutes
+                    {dashboardMode === "timed"
+                      ? "Every exam · 60 questions · 120 minutes"
+                      : "Every exam · 60 questions · untimed answer review"}
                   </span>
                 </div>
                 <div className="exam-grid">
@@ -472,30 +478,34 @@ export default function Home() {
                         {String(position + 1).padStart(2, "0")}
                       </div>
                       <div className="eyebrow">
-                        {position === 0
-                          ? "RECOMMENDED FIRST"
-                          : "FULL SIMULATION"}
+                        {dashboardMode === "timed"
+                          ? position === 0
+                            ? "RECOMMENDED FIRST"
+                            : "FULL SIMULATION"
+                          : "GUIDED REVIEW"}
                       </div>
                       <h3>{exam.title}</h3>
                       <p>{exam.description}</p>
                       <div className="exam-details">
                         <span>{exam.questionCount} questions</span>
-                        <span>{exam.durationMinutes} minutes</span>
+                        <span>{dashboardMode === "timed" ? `${exam.durationMinutes} minutes` : "untimed"}</span>
                       </div>
                       <button
                         className={position === 0 ? "primary" : "exam-start"}
                         disabled={busy || !exam.available || (cloud && !user)}
-                        onClick={() => start("timed", undefined, exam.id)}
+                        onClick={() => start(dashboardMode, undefined, exam.id)}
                       >
                         {exam.available
-                          ? "Start exam"
+                          ? dashboardMode === "timed"
+                            ? "Start timed exam"
+                            : "Start review"
                           : "Exam bank unavailable"}{" "}
                         <span aria-hidden="true">→</span>
                       </button>
                     </article>
                   ))}
                 </div>
-              </section>}
+              </section>
               {savedSession && (
                 <section className="card saved-exam" aria-labelledby="saved-exam-title">
                   <div>
@@ -515,45 +525,6 @@ export default function Home() {
                   </button>
                 </section>
               )}
-              {dashboardMode === "review" && <><div className="section-heading">
-                <div>
-                  <div className="eyebrow">REVIEW MODE</div>
-                  <h2>Choose a topic to study</h2>
-                </div>
-                <span className="muted">Untimed · check answers as you go</span>
-              </div>
-              <div className="topics">
-                {topicAnalytics.map(({ topic, questions, percentage }) => (
-                  <button
-                    className="topic"
-                    key={topic}
-                    disabled={busy || (cloud && !user)}
-                    onClick={() => start("review", topic)}
-                  >
-                    <span className="topic-icon" aria-hidden="true">
-                      {topic === "Compute"
-                        ? "◫"
-                        : topic === "Networking"
-                          ? "⌁"
-                          : topic === "Storage"
-                            ? "▣"
-                            : "◇"}
-                    </span>
-                    <span className="topic-copy">
-                      <strong>{topic}</strong>
-                      <br />
-                      <small className="muted">
-                        {questions} questions
-                        {percentage !== null
-                          ? ` · ${percentage}% verified score`
-                          : " · untimed"}
-                      </small>
-                    </span>
-                    <span aria-hidden="true">→</span>
-                  </button>
-                ))}
-              </div>
-              </>}
               {attempts.length > 0 && (
                 <section className="insights card">
                   <div>

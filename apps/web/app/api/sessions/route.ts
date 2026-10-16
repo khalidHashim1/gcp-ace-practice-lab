@@ -82,7 +82,11 @@ export async function PATCH(request: Request) {
       })
       .safeParse(await readJson(request));
     if (!parsed.success) throw new Error("BAD_REQUEST: invalid saved progress");
-    const session = await currentSession(user.uid);
+    const session = (await getRecord(
+      user.uid,
+      "sessions",
+      parsed.data.sessionId,
+    )) as StoredSession | undefined;
     if (!session || session.id !== parsed.data.sessionId || session.status === "submitted")
       throw new Error("NOT_FOUND");
     validateProgress(session, parsed.data.answers, parsed.data.flags);
@@ -110,7 +114,11 @@ export async function POST(request: Request) {
     const user = await identity(request);
     const parsed = z.object({ sessionId: z.string().uuid() }).safeParse(await readJson(request));
     if (!parsed.success) throw new Error("BAD_REQUEST: invalid session");
-    const session = await currentSession(user.uid);
+    const session = (await getRecord(
+      user.uid,
+      "sessions",
+      parsed.data.sessionId,
+    )) as StoredSession | undefined;
     if (!session || session.id !== parsed.data.sessionId || session.status === "submitted")
       throw new Error("NOT_FOUND");
     const resumed: StoredSession = {
@@ -140,7 +148,11 @@ export async function PUT(request: Request) {
       })
       .safeParse(await readJson(request));
     if (!parsed.success) throw new Error("BAD_REQUEST: invalid answer check");
-    const session = await currentSession(user.uid);
+    const session = (await getRecord(
+      user.uid,
+      "sessions",
+      parsed.data.sessionId,
+    )) as StoredSession | undefined;
     if (!session || session.id !== parsed.data.sessionId || session.status === "submitted")
       throw new Error("NOT_FOUND");
     if ((session.mode ?? (session.deadline ? "timed" : "review")) !== "review")
