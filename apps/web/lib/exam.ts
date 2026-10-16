@@ -32,6 +32,7 @@ export function score(
       status: verified ? (ok ? "correct" : "incorrect") : "ungraded",
       correctOptionIds: verified ? q.correctOptionIds : [],
       explanation: verified ? q.explanation : null,
+      optionExplanations: verified ? q.optionExplanations : {},
       references: verified ? q.references : [],
     };
   });

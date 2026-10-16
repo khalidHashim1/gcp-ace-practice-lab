@@ -7,11 +7,13 @@ import {
   saveRecord,
 } from "../../../lib/server";
 import { publicQuestion, type Question } from "../../../lib/schema";
+import { score } from "../../../lib/exam";
 
 type StoredSession = {
   id: string;
   questions: Question[];
   deadline: number | null;
+  mode?: "review" | "timed";
   status?: "active" | "paused" | "submitted";
   pausedRemainingSeconds?: number | null;
   answers?: Record<string, string[]>;
@@ -24,6 +26,7 @@ function toPublic(session: StoredSession) {
     id: session.id,
     questions: session.questions.map(publicQuestion),
     deadline: session.deadline,
+    mode: session.mode ?? (session.deadline ? "timed" : "review"),
     answers: session.answers ?? {},
     flags: session.flags ?? [],
     index: Math.max(0, Math.min(session.index ?? 0, session.questions.length - 1)),
@@ -121,6 +124,31 @@ export async function POST(request: Request) {
     };
     await saveRecord(user.uid, "sessions", session.id, resumed);
     return Response.json(toPublic(resumed));
+  } catch (error) {
+    return failure(error);
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const user = await identity(request);
+    const parsed = z
+      .object({
+        sessionId: z.string().uuid(),
+        questionId: z.string(),
+        answers: z.record(z.string(), z.array(z.enum(["A", "B", "C", "D", "E"])).max(4)),
+      })
+      .safeParse(await readJson(request));
+    if (!parsed.success) throw new Error("BAD_REQUEST: invalid answer check");
+    const session = await currentSession(user.uid);
+    if (!session || session.id !== parsed.data.sessionId || session.status === "submitted")
+      throw new Error("NOT_FOUND");
+    if ((session.mode ?? (session.deadline ? "timed" : "review")) !== "review")
+      throw new Error("BAD_REQUEST: answer checks are only available in review mode");
+    validateProgress(session, parsed.data.answers, []);
+    const question = session.questions.find((item) => item.id === parsed.data.questionId);
+    if (!question) throw new Error("BAD_REQUEST: unknown question");
+    return Response.json(score([question], parsed.data.answers).review[0]);
   } catch (error) {
     return failure(error);
   }

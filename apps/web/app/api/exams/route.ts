@@ -17,7 +17,7 @@ export async function POST(r: Request) {
     const p = z
       .object({
         topic: z.string().optional(),
-        mode: z.enum(["practice", "mock"]),
+        mode: z.enum(["review", "timed", "practice", "mock"]),
         examId: z.string().optional(),
       })
       .safeParse(await readJson(r));
@@ -27,8 +27,9 @@ export async function POST(r: Request) {
       (item) => item.id === (p.data.examId ?? "ace-practice-1"),
     );
     if (!exam) throw new Error("BAD_REQUEST: unknown exam");
+    const timed = p.data.mode === "timed" || p.data.mode === "mock";
     const qs =
-      p.data.mode === "mock"
+      timed
         ? await questionsForExam(exam)
         : (await questions(exam.questionBankId)).filter(
             (q) => !p.data.topic || q.topic === p.data.topic,
@@ -38,10 +39,10 @@ export async function POST(r: Request) {
       .map((q) => ({ q, n: Math.random() }))
       .sort((a, b) => a.n - b.n)
       .map((x) => x.q);
-    const sessionQuestions = p.data.mode === "mock" ? shuffled : shuffled;
+    const sessionQuestions = shuffled;
     const id = randomUUID();
     const deadline =
-      p.data.mode === "mock"
+      timed
         ? Date.now() + exam.durationMinutes * 60 * 1000
         : null;
     await saveRecord(user.uid, "sessions", id, {
@@ -52,6 +53,7 @@ export async function POST(r: Request) {
       startedAt: Date.now(),
       updatedAt: Date.now(),
       status: "active",
+      mode: timed ? "timed" : "review",
       answers: {},
       flags: [],
       index: 0,
@@ -61,6 +63,7 @@ export async function POST(r: Request) {
       id,
       questions: sessionQuestions.map(publicQuestion),
       deadline,
+      mode: timed ? "timed" : "review",
     });
   } catch (e) {
     return failure(e);

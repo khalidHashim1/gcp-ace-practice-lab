@@ -6,9 +6,12 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
       name: "Pass your cloud exam with confidence.",
     }),
   ).toBeVisible();
+  await page.getByRole("button", { name: /Review mode/ }).click();
   await page.getByRole("button", { name: /Networking/ }).click();
   await expect(page.getByText(/Select 1 answer/)).toBeVisible();
   await page.locator(".option").first().click();
+  await page.getByRole("button", { name: "Check answer", exact: true }).click();
+  await expect(page.getByText("Not yet verified", { exact: true })).toBeVisible();
   await page
     .getByRole("button", { name: "Flag for review", exact: true })
     .click();
@@ -44,6 +47,7 @@ test("practice, history, admin and timed exam controls", async ({ page }) => {
     page.getByText("Saved 81 validated questions to this bank."),
   ).toBeVisible();
   await page.getByRole("button", { name: "Dashboard", exact: true }).click();
+  await page.getByRole("button", { name: /Timed mode/ }).click();
   await page.getByRole("button", { name: /Start exam/ }).first().click();
   await expect(page.locator(".timer")).toBeVisible();
   await expect(page.locator(".numbers button")).toHaveCount(60);

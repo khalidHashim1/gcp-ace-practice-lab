@@ -21,6 +21,11 @@ export const questionSchema = z
     verification: z.enum(["ungraded", "verified"]),
     correctOptionIds: z.array(z.enum(["A", "B", "C", "D", "E"])),
     explanation: z.string().nullable(),
+    // Optional, verified rationale for each option. Existing question banks
+    // remain valid while this is progressively added during review.
+    optionExplanations: z
+      .partialRecord(z.enum(["A", "B", "C", "D", "E"]), z.string().min(1))
+      .default({}),
     references: z.array(
       z
         .string()
@@ -104,12 +109,13 @@ export type Question = z.infer<typeof questionSchema>;
 export type Exam = z.infer<typeof examSchema>;
 export type PublicQuestion = Omit<
   Question,
-  "correctOptionIds" | "explanation" | "references"
+  "correctOptionIds" | "explanation" | "optionExplanations" | "references"
 >;
 export function publicQuestion(q: Question): PublicQuestion {
-  const { correctOptionIds, explanation, references, ...safe } = q;
+  const { correctOptionIds, explanation, optionExplanations, references, ...safe } = q;
   void correctOptionIds;
   void explanation;
+  void optionExplanations;
   void references;
   return safe;
 }

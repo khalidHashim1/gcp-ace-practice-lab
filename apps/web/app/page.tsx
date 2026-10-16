@@ -17,6 +17,7 @@ type Review = {
   status: string;
   correctOptionIds: string[];
   explanation: string | null;
+  optionExplanations: Record<string, string>;
   references: string[];
 };
 type Attempt = {
@@ -36,6 +37,7 @@ type Session = {
   id: string;
   questions: PublicQuestion[];
   deadline: number | null;
+  mode: "review" | "timed";
 };
 type ResumableSession = Session & {
   answers: Record<string, string[]>;
@@ -59,6 +61,8 @@ export default function Home() {
     [attempts, setAttempts] = useState<Attempt[]>([]),
     [view, setView] = useState("dashboard"),
     [session, setSession] = useState<Session | null>(null),
+    [dashboardMode, setDashboardMode] = useState<"review" | "timed">("timed"),
+    [checkedReview, setCheckedReview] = useState<Record<string, Review>>({}),
     [savedSession, setSavedSession] = useState<ResumableSession | null>(null),
     [answers, setAnswers] = useState<Record<string, string[]>>({}),
     [flags, setFlags] = useState<string[]>([]),
@@ -196,7 +200,7 @@ export default function Home() {
       void submit();
   });
   async function start(
-    mode: "practice" | "mock",
+    mode: "review" | "timed",
     topic?: string,
     examId?: string,
   ) {
@@ -208,6 +212,7 @@ export default function Home() {
       setAnswers({});
       setFlags([]);
       setIndex(0);
+      setCheckedReview({});
       setView("exam");
     });
   }
@@ -237,13 +242,26 @@ export default function Home() {
       setAnswers(resumed.answers);
       setFlags(resumed.flags);
       setIndex(resumed.index);
+      setCheckedReview({});
       setSeconds(resumed.deadline ? remainingSeconds(resumed.deadline, Date.now()) : 0);
       setSavedSession(null);
       setView("exam");
     });
   }
+  async function checkAnswer() {
+    if (!session || !q) return;
+    await run(async () => {
+      const review = await api("sessions", "PUT", {
+        sessionId: session.id,
+        questionId: q.id,
+        answers,
+      });
+      setCheckedReview((old) => ({ ...old, [q.id]: review }));
+    });
+  }
   const topics = useMemo(() => [...new Set(bank.map((q) => q.topic))], [bank]);
   const q = session?.questions[index];
+  const checked = q ? checkedReview[q.id] : undefined;
   const answeredCount = session
     ? Object.values(answers).filter((selection) => selection.length).length
     : 0;
@@ -413,7 +431,23 @@ export default function Home() {
                 verified answer keys. Questions without a verified key stay
                 ungraded; completion is tracked separately from score.
               </div>
-              <section
+              <section className="mode-picker" aria-label="Study mode">
+                <button
+                  className={dashboardMode === "review" ? "mode-choice active" : "mode-choice"}
+                  onClick={() => setDashboardMode("review")}
+                >
+                  <strong>Review mode</strong>
+                  <span>Untimed · check each answer and study its explanation</span>
+                </button>
+                <button
+                  className={dashboardMode === "timed" ? "mode-choice active" : "mode-choice"}
+                  onClick={() => setDashboardMode("timed")}
+                >
+                  <strong>Timed mode</strong>
+                  <span>60 questions · 120 minutes · exam simulation</span>
+                </button>
+              </section>
+              {dashboardMode === "timed" && <section
                 className="exam-library"
                 aria-labelledby="exam-library-title"
               >
@@ -451,7 +485,7 @@ export default function Home() {
                       <button
                         className={position === 0 ? "primary" : "exam-start"}
                         disabled={busy || !exam.available || (cloud && !user)}
-                        onClick={() => start("mock", undefined, exam.id)}
+                        onClick={() => start("timed", undefined, exam.id)}
                       >
                         {exam.available
                           ? "Start exam"
@@ -461,7 +495,7 @@ export default function Home() {
                     </article>
                   ))}
                 </div>
-              </section>
+              </section>}
               {savedSession && (
                 <section className="card saved-exam" aria-labelledby="saved-exam-title">
                   <div>
@@ -481,12 +515,12 @@ export default function Home() {
                   </button>
                 </section>
               )}
-              <div className="section-heading">
+              {dashboardMode === "review" && <><div className="section-heading">
                 <div>
-                  <div className="eyebrow">FOCUSED PRACTICE</div>
-                  <h2>Choose a topic</h2>
+                  <div className="eyebrow">REVIEW MODE</div>
+                  <h2>Choose a topic to study</h2>
                 </div>
-                <span className="muted">Untimed · instant review</span>
+                <span className="muted">Untimed · check answers as you go</span>
               </div>
               <div className="topics">
                 {topicAnalytics.map(({ topic, questions, percentage }) => (
@@ -494,7 +528,7 @@ export default function Home() {
                     className="topic"
                     key={topic}
                     disabled={busy || (cloud && !user)}
-                    onClick={() => start("practice", topic)}
+                    onClick={() => start("review", topic)}
                   >
                     <span className="topic-icon" aria-hidden="true">
                       {topic === "Compute"
@@ -519,6 +553,7 @@ export default function Home() {
                   </button>
                 ))}
               </div>
+              </>}
               {attempts.length > 0 && (
                 <section className="insights card">
                   <div>
@@ -612,20 +647,69 @@ export default function Home() {
                     }
                     key={o.id}
                     onClick={() =>
-                      setAnswers({
-                        ...answers,
-                        [q.id]: toggleSelection(
-                          answers[q.id] ?? [],
-                          o.id,
-                          q.selectionCount,
-                        ),
-                      })
+                      {
+                        setAnswers({
+                          ...answers,
+                          [q.id]: toggleSelection(
+                            answers[q.id] ?? [],
+                            o.id,
+                            q.selectionCount,
+                          ),
+                        });
+                        setCheckedReview((old) => {
+                          const next = { ...old };
+                          delete next[q.id];
+                          return next;
+                        });
+                      }
                     }
                   >
                     <span className="option-letter">{o.id}</span>
                     <span>{o.text}</span>
                   </button>
                 ))}
+                {session.mode === "review" && (
+                  <div className="review-check">
+                    <button
+                      className="primary"
+                      disabled={busy || !(answers[q.id]?.length)}
+                      onClick={() => void checkAnswer()}
+                    >
+                      {busy ? "Checking…" : "Check answer"}
+                    </button>
+                    {!answers[q.id]?.length && (
+                      <span className="muted">Select an answer first.</span>
+                    )}
+                  </div>
+                )}
+                {checked && (
+                  <section className="answer-feedback" aria-live="polite">
+                    <div className="eyebrow">ANSWER REVIEW</div>
+                    <h3>{checked.status === "correct" ? "Correct" : checked.status === "incorrect" ? "Review this answer" : "Not yet verified"}</h3>
+                    <p className="explanation">
+                      {checked.explanation ?? "This question has no verified explanation yet."}
+                    </p>
+                    {q.options.map((option) => (
+                      <p
+                        className={checked.correctOptionIds.includes(option.id) ? "option-rationale correct-answer" : "option-rationale"}
+                        key={option.id}
+                      >
+                        <strong>{option.id}</strong>
+                        <span>
+                          {checked.optionExplanations[option.id] ??
+                            (checked.correctOptionIds.includes(option.id)
+                              ? "Verified as a correct answer."
+                              : "No option-specific rationale has been verified for this distractor yet.")}
+                        </span>
+                      </p>
+                    ))}
+                    {checked.references.map((url) => (
+                      <a href={url} target="_blank" rel="noreferrer" key={url}>
+                        Official Google Cloud reference ↗
+                      </a>
+                    ))}
+                  </section>
+                )}
                 <div className="row spread">
                   <button
                     disabled={index === 0}
