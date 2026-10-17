@@ -79,7 +79,10 @@ export default function Home() {
     [adminText, setAdminText] = useState(""),
     [notice, setNotice] = useState(""),
     [seconds, setSeconds] = useState(0),
-    [confirmSubmit, setConfirmSubmit] = useState(false);
+    [confirmSubmit, setConfirmSubmit] = useState(false),
+    [feedbackOpen, setFeedbackOpen] = useState(false),
+    [feedbackCategory, setFeedbackCategory] = useState("unclear_explanation"),
+    [feedbackComment, setFeedbackComment] = useState("");
   const submitting = useRef(false);
   async function api(path: string, method = "GET", body?: unknown) {
     const token = user ? await user.getIdToken() : null;
@@ -447,6 +450,11 @@ export default function Home() {
                   <span>60 questions · 120 minutes · exam simulation</span>
                 </button>
               </section>
+              <section className="card onboarding" aria-label="How practice works">
+                <div className="eyebrow">HOW IT WORKS</div>
+                <h2>Pick the study style that fits today.</h2>
+                <p><strong>Review mode</strong> is untimed and lets you check answers as you go. <strong>Timed mode</strong> is a 60-question, 120-minute simulation. You can pause either mode and resume later.</p>
+              </section>
               <section
                 className="exam-library"
                 aria-labelledby="exam-library-title"
@@ -588,6 +596,20 @@ export default function Home() {
                 aria-label={`${answeredCount} of ${session.questions.length} questions answered`}
               />
               <section className="card exam-card">
+                {cloud && user && (
+                  <section className="feedback-control" aria-label="Question feedback">
+                    <button onClick={() => setFeedbackOpen((open) => !open)}>Report a problem with this question</button>
+                    {feedbackOpen && <div className="feedback-form">
+                      <label htmlFor="feedback-category">What needs attention?</label>
+                      <select id="feedback-category" value={feedbackCategory} onChange={(event) => setFeedbackCategory(event.target.value)}>
+                        <option value="wrong_answer">Wrong answer</option><option value="unclear_explanation">Explanation unclear</option><option value="unclear_question">Question unclear</option><option value="technical_issue">Technical issue</option>
+                      </select>
+                      <label htmlFor="feedback-comment">Optional note</label>
+                      <textarea id="feedback-comment" value={feedbackComment} maxLength={1000} onChange={(event) => setFeedbackComment(event.target.value)} />
+                      <button disabled={busy} onClick={() => void run(async () => { await api("feedback", "POST", { questionId: q.id, category: feedbackCategory, comment: feedbackComment }); setFeedbackOpen(false); setFeedbackComment(""); setNotice("Thanks — your feedback was saved for review."); })}>Send feedback</button>
+                    </div>}
+                  </section>
+                )}
                 <div className="row spread">
                   <span className="muted">
                     Select {q.selectionCount} answer
