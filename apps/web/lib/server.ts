@@ -245,7 +245,7 @@ export function failure(e: unknown) {
 }
 
 /** Bound imports below Firestore's document limit and reject malformed JSON. */
-export async function readJson(request: Request) {
+export async function readJson(request: Request, maxBytes = 700 * 1024) {
   const reader = request.body?.getReader();
   if (!reader) throw new Error("BAD_REQUEST: empty body");
   const chunks: Uint8Array[] = [];
@@ -254,9 +254,9 @@ export async function readJson(request: Request) {
     const { done, value } = await reader.read();
     if (done) break;
     size += value.byteLength;
-    if (size > 700 * 1024) {
+    if (size > maxBytes) {
       await reader.cancel();
-      throw new Error("BAD_REQUEST: body exceeds 700 KiB");
+      throw new Error(`BAD_REQUEST: body exceeds ${Math.floor(maxBytes / 1024)} KiB`);
     }
     chunks.push(value);
   }

@@ -26,7 +26,9 @@ export async function GET(r: Request) {
 export async function PUT(r: Request) {
   try {
     if (!(await identity(r)).admin) throw new Error("FORBIDDEN");
-    const body = await readJson(r);
+    // Question-bank imports are larger than ordinary session payloads, but
+    // still capped beneath the Cloud Run request limit.
+    const body = await readJson(r, 1024 * 1024);
     const envelope =
       body && typeof body === "object" && !Array.isArray(body)
         ? (body as { bankId?: unknown; questions?: unknown })
