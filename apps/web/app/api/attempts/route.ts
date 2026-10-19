@@ -55,6 +55,9 @@ export async function POST(r: Request) {
     const result = {
       id: p.data.sessionId,
       submittedAt: Date.now(),
+      mode: session.mode ?? null,
+      examId: session.examId ?? null,
+      topic: session.topic ?? null,
       expired: Boolean(late),
       flags: p.data.flags,
       questions: qs.map((q) => ({

@@ -29,12 +29,11 @@ export async function POST(r: Request) {
     if (!exam) throw new Error("BAD_REQUEST: unknown exam");
     const timed = p.data.mode === "timed" || p.data.mode === "mock";
     const usesExamSet = timed || p.data.mode === "review";
-    const qs =
-      usesExamSet
-        ? await questionsForExam(exam)
-        : (await questions(exam.questionBankId)).filter(
-            (q) => !p.data.topic || q.topic === p.data.topic,
-          );
+    const qs = usesExamSet
+      ? await questionsForExam(exam)
+      : (await questions(exam.questionBankId)).filter(
+          (q) => !p.data.topic || q.topic === p.data.topic,
+        );
     if (!qs.length) throw new Error("BAD_REQUEST: empty topic");
     const shuffled = qs
       .map((q) => ({ q, n: Math.random() }))
@@ -42,13 +41,13 @@ export async function POST(r: Request) {
       .map((x) => x.q);
     const sessionQuestions = shuffled;
     const id = randomUUID();
-    const deadline =
-      timed
-        ? Date.now() + exam.durationMinutes * 60 * 1000
-        : null;
+    const deadline = timed
+      ? Date.now() + exam.durationMinutes * 60 * 1000
+      : null;
     await saveRecord(user.uid, "sessions", id, {
       id,
       examId: exam.id,
+      topic: !usesExamSet ? (p.data.topic ?? null) : null,
       questions: sessionQuestions,
       deadline,
       startedAt: Date.now(),

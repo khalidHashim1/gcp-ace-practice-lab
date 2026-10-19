@@ -119,10 +119,39 @@ describe("local API integration", () => {
     expect(
       await (await getSavedSession(new Request("http://localhost/api"))).json(),
     ).toMatchObject({ id: session.id, paused: true });
-    const resumed = await (await resume(request({ sessionId: session.id }))).json();
+    const resumed = await (
+      await resume(request({ sessionId: session.id }))
+    ).json();
     expect(resumed.deadline).toBeGreaterThan(Date.now());
     expect(resumed.answers).toEqual(paused.answers);
     expect(resumed.flags).toEqual(paused.flags);
+  });
+  it("records topic/type metadata for display without inferring legacy attempt types", async () => {
+    const session = await (
+      await start(request({ mode: "practice", topic: "Networking" }))
+    ).json();
+    expect(
+      session.questions.every(
+        (question: { topic: string }) => question.topic === "Networking",
+      ),
+    ).toBe(true);
+    const result = await (
+      await submit(request({ sessionId: session.id, answers: {}, flags: [] }))
+    ).json();
+    expect(result).toMatchObject({
+      mode: "review",
+      topic: "Networking",
+      examId: "ace-practice-1",
+    });
+    const mock = await (await start(request({ mode: "timed" }))).json();
+    const mockResult = await (
+      await submit(request({ sessionId: mock.id, answers: {}, flags: [] }))
+    ).json();
+    expect(mockResult).toMatchObject({
+      mode: "timed",
+      topic: null,
+      examId: "ace-practice-1",
+    });
   });
   it("rejects unknown sessions and empty topics", async () => {
     expect(
