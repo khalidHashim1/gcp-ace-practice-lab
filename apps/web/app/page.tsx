@@ -3,11 +3,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { initializeApp, getApps } from "@firebase/app";
 import {
   getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
+  browserLocalPersistence,
+  setPersistence,
   signOut,
   type User,
 } from "@firebase/auth";
+import { continueAsGuest, continueWithGoogle, authenticationError } from "../lib/client-auth";
 import type { PublicQuestion } from "../lib/schema";
 import { toggleSelection, remainingSeconds } from "../lib/exam";
 import { summarizeTopics } from "../lib/analytics";
@@ -73,6 +74,10 @@ export default function Home() {
     [busy, setBusy] = useState(false),
     [ready, setReady] = useState(false),
     [cloud, setCloud] = useState(false),
+    [authReady, setAuthReady] = useState(false),
+    [authBusy, setAuthBusy] = useState(false),
+    [guest, setGuest] = useState(false),
+    [confirmGuestSignOut, setConfirmGuestSignOut] = useState(false),
     [user, setUser] = useState<User | null>(null),
     [isAdmin, setIsAdmin] = useState(false),
     [adminBankId, setAdminBankId] = useState("ace-practice-1"),
@@ -84,6 +89,8 @@ export default function Home() {
     [feedbackCategory, setFeedbackCategory] = useState("unclear_explanation"),
     [feedbackComment, setFeedbackComment] = useState("");
   const submitting = useRef(false);
+  const authPending = useRef(false);
+  const previousUid = useRef<string | null>(null);
   async function api(path: string, method = "GET", body?: unknown) {
     const token = user ? await user.getIdToken() : null;
     const response = await fetch("/api/" + path, {
@@ -100,20 +107,52 @@ export default function Home() {
   }
   useEffect(() => {
     let unsubscribe: undefined | (() => void);
+    let disposed = false;
     fetch("/api/config")
       .then((r) => r.json())
-      .then((c) => {
+      .then(async (c) => {
+        if (disposed) return;
         setCloud(c.cloud);
         if (c.cloud) {
           const app = getApps()[0] ?? initializeApp(c.firebase);
-          unsubscribe = getAuth(app).onAuthStateChanged(async (u) => {
+          const auth = getAuth(app);
+          await setPersistence(auth, browserLocalPersistence);
+          if (disposed) return;
+          unsubscribe = auth.onIdTokenChanged((u) => {
+            if (disposed) return;
+            if (previousUid.current !== (u?.uid ?? null)) {
+              setAttempts([]);
+              setSavedSession(null);
+              setSession(null);
+              setResult(null);
+              setAnswers({});
+              setFlags([]);
+              setCheckedReview({});
+              setView("dashboard");
+            }
+            previousUid.current = u?.uid ?? null;
             setUser(u);
-            setIsAdmin(Boolean(u && (await u.getIdTokenResult()).claims.admin));
+            setGuest(Boolean(u?.isAnonymous));
+            setIsAdmin(false);
+            setAuthReady(true);
+            if (u && !u.isAnonymous) {
+              void u.getIdTokenResult().then((token) => {
+                if (!disposed && auth.currentUser?.uid === u.uid && !u.isAnonymous)
+                  setIsAdmin(token.claims.admin === true);
+              }).catch(() => {
+                if (!disposed) setError("Could not verify account permissions. Please retry sign-in.");
+              });
+            }
           });
-        } else setIsAdmin(true);
+        } else {
+          setIsAdmin(true);
+          setAuthReady(true);
+        }
         return Promise.all([fetch("/api/questions"), fetch("/api/exams")]);
       })
-      .then(async ([questionResponse, examResponse]) => {
+      .then(async (responses) => {
+        if (!responses || disposed) return;
+        const [questionResponse, examResponse] = responses;
         if (!questionResponse.ok) throw new Error("Could not load questions");
         if (!examResponse.ok) throw new Error("Could not load exam catalog");
         const [loadedBank, loadedExams] = await Promise.all([
@@ -127,7 +166,7 @@ export default function Home() {
       .finally(() => setReady(true));
     document.documentElement.dataset.theme =
       localStorage.getItem("ace-theme") ?? "light";
-    return () => unsubscribe?.();
+    return () => { disposed = true; unsubscribe?.(); };
   }, []);
   useEffect(() => {
     if (!ready || (cloud && !user)) return;
@@ -163,6 +202,28 @@ export default function Home() {
       setError(e instanceof Error ? e.message : "Unexpected error");
     } finally {
       setBusy(false);
+    }
+  }
+  async function authenticate(method: "guest" | "google") {
+    if (authPending.current || !authReady) return;
+    authPending.current = true;
+    setAuthBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const wasGuest = Boolean(getAuth().currentUser?.isAnonymous);
+      const authenticated = method === "guest"
+        ? await continueAsGuest(getAuth())
+        : await continueWithGoogle(getAuth());
+      setUser(authenticated);
+      setGuest(authenticated.isAnonymous);
+      if (wasGuest && !authenticated.isAnonymous)
+        setNotice("Your progress is now saved with Google. Your attempts and saved exams are unchanged.");
+    } catch (e) {
+      setError(authenticationError(e));
+    } finally {
+      authPending.current = false;
+      setAuthBusy(false);
     }
   }
   async function submit() {
@@ -340,21 +401,17 @@ export default function Home() {
         >
           Light / Dark
         </button>
-        {cloud && (
-          <button
-            disabled={!!session}
-            onClick={() =>
-              run(async () => {
-                if (user) {
-                  await signOut(getAuth());
-                  setAttempts([]);
-                } else
-                  await signInWithPopup(getAuth(), new GoogleAuthProvider());
-              })
-            }
-          >
-            {user ? "Sign out" : "Google sign-in"}
-          </button>
+        {cloud && user && (
+          <>
+            {guest && <span className="muted">Guest</span>}
+            {guest && <button disabled={authBusy || !authReady || busy || !!session} onClick={() => void authenticate("google")}>
+              {authBusy ? "Connecting…" : "Save My Progress with Google"}
+            </button>}
+            <button disabled={authBusy || busy || !!session} onClick={() => {
+              if (guest) setConfirmGuestSignOut(true);
+              else void run(async () => { await signOut(getAuth()); });
+            }}>Sign out</button>
+          </>
         )}
       </nav>
       {error && (
@@ -367,6 +424,30 @@ export default function Home() {
         <div role="status" className="banner">
           {notice}
         </div>
+      )}
+      {ready && cloud && !user && (
+        <section className="card" aria-label="Sign in" aria-busy={authBusy || !authReady}>
+          <h2>Choose how to continue</h2>
+          <p className="muted">Use Google for a permanent account and synchronized progress, or explore every practice feature as a guest.</p>
+          <div className="row">
+            <button className="primary" disabled={!authReady || authBusy} onClick={() => void authenticate("google")}>Continue with Google</button>
+            <button disabled={!authReady || authBusy} onClick={() => void authenticate("guest")}>Continue as Guest</button>
+          </div>
+          {(!authReady || authBusy) && <p role="status">{authBusy ? "Signing in…" : "Restoring your session…"}</p>}
+          <p className="muted">Guest progress is saved to this browser&apos;s account. It may become inaccessible if the anonymous account is deleted, browser sign-in data is lost, or you change devices. Link Google to keep access across devices.</p>
+        </section>
+      )}
+      {cloud && guest && <p className="muted">Guest progress depends on this browser&apos;s sign-in session. Save it with Google before changing devices or clearing site data. Pause &amp; save an active exam before linking.</p>}
+      {confirmGuestSignOut && (
+        <section className="card" aria-label="Guest sign-out confirmation">
+          <h2>Leave your guest account?</h2>
+          <p>Signing out may make your guest progress inaccessible. Save My Progress with Google first to keep access.</p>
+          <div className="row">
+            <button disabled={authBusy || busy} onClick={() => setConfirmGuestSignOut(false)}>Keep guest session</button>
+            <button disabled={authBusy || busy} onClick={() => { setConfirmGuestSignOut(false); void authenticate("google"); }}>Save My Progress with Google</button>
+            <button disabled={authBusy || busy} onClick={() => void run(async () => { await signOut(getAuth()); setConfirmGuestSignOut(false); })}>Sign out of guest account</button>
+          </div>
+        </section>
       )}
       {!ready ? (
         <p role="status">Loading your practice lab…</p>
@@ -422,7 +503,7 @@ export default function Home() {
                     <div className="stat">{attempts.length}</div>
                     <span>
                       {cloud
-                        ? "Synced to your account"
+                        ? (guest ? "Saved to your guest account" : "Synced to your account")
                         : "Available in local development"}
                     </span>
                   </div>
@@ -562,7 +643,7 @@ export default function Home() {
               )}
               {cloud && !user && (
                 <p className="muted">
-                  Sign in with Google to start and save your progress.
+                  Continue with Google or as a guest to start and save your progress.
                 </p>
               )}
             </>
