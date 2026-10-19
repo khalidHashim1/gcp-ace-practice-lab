@@ -58,7 +58,7 @@ export async function identity(request: Request) {
   if (!token) throw new Error("UNAUTHORIZED");
   try {
     const claims = await getAuth().verifyIdToken(token, true);
-    return { uid: claims.uid, admin: claims.admin === true };
+    return { uid: claims.uid, admin: claims.admin === true && claims.firebase?.sign_in_provider !== "anonymous" };
   } catch {
     throw new Error("UNAUTHORIZED");
   }
