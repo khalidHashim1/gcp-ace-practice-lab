@@ -181,6 +181,39 @@ export async function getRecord(uid: string, collection: string, id: string) {
     throw e;
   }
 }
+// Session read/modify/write operations must serialize across Cloud Run instances.
+// The local adapter serializes per record for development and integration tests.
+const sessionLocks = new Map<string, Promise<unknown>>();
+export async function updateSession<T extends object>(
+  uid: string,
+  id: string,
+  update: (session: T | undefined) => T,
+): Promise<T> {
+  if (cloud) {
+    const ref = db().doc(`users/${uid}/sessions/${id}`);
+    return db().runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(ref);
+      const next = update(snapshot.data() as T | undefined);
+      transaction.set(ref, next);
+      return next;
+    });
+  }
+  const key = `${uid}/${id}`;
+  const previous = sessionLocks.get(key) ?? Promise.resolve();
+  const operation = previous
+    .catch(() => {})
+    .then(async () => {
+      const next = update(await getRecord(uid, "sessions", id));
+      await saveRecord(uid, "sessions", id, next);
+      return next;
+    });
+  sessionLocks.set(key, operation);
+  try {
+    return await operation;
+  } finally {
+    if (sessionLocks.get(key) === operation) sessionLocks.delete(key);
+  }
+}
 export async function deleteRecord(uid: string, collection: string, id: string) {
   if (cloud) {
     await db().doc(`users/${uid}/${collection}/${id}`).delete();
