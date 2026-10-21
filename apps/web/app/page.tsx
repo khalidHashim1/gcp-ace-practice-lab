@@ -16,6 +16,11 @@ import {
 import { Icon, StatCard, EmptyState, Modal, type IconName } from "../lib/ui";
 import type { PublicQuestion } from "../lib/schema";
 import { toggleSelection, remainingSeconds } from "../lib/exam";
+import {
+  SessionProgress,
+  type SaveState,
+  type Progress,
+} from "../lib/session-progress";
 import { summarizeTopics } from "../lib/analytics";
 type Review = {
   id: string;
@@ -47,6 +52,7 @@ type Session = {
   questions: PublicQuestion[];
   deadline: number | null;
   mode: "review" | "timed";
+  progressRevision?: number;
 };
 type ResumableSession = Session & {
   answers: Record<string, string[]>;
@@ -102,7 +108,52 @@ export default function Home() {
     [feedbackOpen, setFeedbackOpen] = useState(false),
     [feedbackCategory, setFeedbackCategory] = useState("unclear_explanation"),
     [feedbackComment, setFeedbackComment] = useState("");
+  const [saveState, setSaveState] = useState<SaveState>("saved");
+  const progressSaver = useRef<SessionProgress | null>(null);
   const submitting = useRef(false);
+  function trackProgress(
+    s: Session,
+    progress: {
+      answers: Record<string, string[]>;
+      flags: string[];
+      index: number;
+    },
+  ) {
+    void progressSaver.current?.stop();
+    setSaveState("saved");
+    const saver = new SessionProgress(
+      progress,
+      s.progressRevision ?? 0,
+      (payload) => api("sessions", "PATCH", { sessionId: s.id, ...payload }),
+      (state) => {
+        if (progressSaver.current === saver) setSaveState(state);
+      },
+    );
+    progressSaver.current = saver;
+  }
+  function changeProgress(change: Partial<Progress>) {
+    const next = { answers, flags, index, ...change };
+    progressSaver.current?.update(next);
+    if (change.answers !== undefined) setAnswers(change.answers);
+    if (change.flags !== undefined) setFlags(change.flags);
+    if (change.index !== undefined) setIndex(change.index);
+  }
+  useEffect(() => {
+    const warn = (event: BeforeUnloadEvent) => {
+      if (progressSaver.current?.pending) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, []);
+  useEffect(
+    () => () => {
+      void progressSaver.current?.stop();
+    },
+    [],
+  );
   const authPending = useRef(false);
   const previousUid = useRef<string | null>(null);
   async function api(path: string, method = "GET", body?: unknown) {
@@ -136,6 +187,8 @@ export default function Home() {
           unsubscribe = auth.onIdTokenChanged((u) => {
             if (disposed) return;
             if (previousUid.current !== (u?.uid ?? null)) {
+              void progressSaver.current?.stop();
+              progressSaver.current = null;
               setAttempts([]);
               setSavedSession(null);
               setSession(null);
@@ -265,11 +318,14 @@ export default function Home() {
     if (!session || submitting.current) return;
     submitting.current = true;
     await run(async () => {
+      await progressSaver.current?.drain();
       const a = await api("attempts", "POST", {
         sessionId: session.id,
         answers,
         flags,
       });
+      await progressSaver.current?.stop();
+      progressSaver.current = null;
       setResult(a);
       setIncorrect(false);
       setAttempts((old) => [a, ...old.filter((v) => v.id !== a.id)]);
@@ -290,13 +346,7 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [session]);
   useEffect(() => {
-    if (
-      session?.deadline &&
-      seconds === 0 &&
-      Date.now() >= session.deadline &&
-      !busy
-    )
-      void submit();
+    if (session?.deadline && seconds === 0 && !busy) void submit();
   });
   async function start(
     mode: "review" | "timed" | "practice",
@@ -316,6 +366,7 @@ export default function Home() {
   ) {
     await run(async () => {
       const s = await api("exams", "POST", { mode, topic, examId });
+      trackProgress(s, { answers: {}, flags: [], index: 0 });
       setSession(s);
       setSavedSession(null);
       setSeconds(s.deadline ? remainingSeconds(s.deadline, Date.now()) : 0);
@@ -329,13 +380,8 @@ export default function Home() {
   async function pause() {
     if (!session) return;
     await run(async () => {
-      const saved = await api("sessions", "PATCH", {
-        sessionId: session.id,
-        answers,
-        flags,
-        index,
-      });
-      setSavedSession(saved);
+      const saved = await progressSaver.current!.save("pause");
+      setSavedSession(saved as ResumableSession);
       setSession(null);
       setConfirmSubmit(false);
       setView("dashboard");
@@ -349,6 +395,11 @@ export default function Home() {
     await run(async () => {
       const resumed = await api("sessions", "POST", {
         sessionId: savedSession.id,
+      });
+      trackProgress(resumed, {
+        answers: resumed.answers,
+        flags: resumed.flags,
+        index: resumed.index,
       });
       setSession(resumed);
       setAnswers(resumed.answers);
@@ -1270,13 +1321,14 @@ export default function Home() {
                             {q.selectionCount > 1 ? "s" : ""} · {q.verification}
                           </span>
                           <button
+                            disabled={busy}
                             className={flags.includes(q.id) ? "flag" : ""}
                             onClick={() =>
-                              setFlags(
-                                flags.includes(q.id)
+                              changeProgress({
+                                flags: flags.includes(q.id)
                                   ? flags.filter((id) => id !== q.id)
                                   : [...flags, q.id],
-                              )
+                              })
                             }
                           >
                             {flags.includes(q.id)
@@ -1287,6 +1339,7 @@ export default function Home() {
                         <p className="question">{q.prompt}</p>
                         {q.options.map((o) => (
                           <button
+                            disabled={busy}
                             aria-pressed={(answers[q.id] ?? []).includes(o.id)}
                             className={
                               "option " +
@@ -1296,13 +1349,15 @@ export default function Home() {
                             }
                             key={o.id}
                             onClick={() => {
-                              setAnswers({
-                                ...answers,
-                                [q.id]: toggleSelection(
-                                  answers[q.id] ?? [],
-                                  o.id,
-                                  q.selectionCount,
-                                ),
+                              changeProgress({
+                                answers: {
+                                  ...answers,
+                                  [q.id]: toggleSelection(
+                                    answers[q.id] ?? [],
+                                    o.id,
+                                    q.selectionCount,
+                                  ),
+                                },
                               });
                               setCheckedReview((old) => {
                                 const next = { ...old };
@@ -1380,16 +1435,39 @@ export default function Home() {
                             ))}
                           </section>
                         )}
+                        <p role="status" aria-live="polite">
+                          {saveState === "saved"
+                            ? "Progress saved"
+                            : saveState === "saving"
+                              ? "Saving progress…"
+                              : saveState === "error"
+                                ? "Progress not saved. Keep this page open and retry."
+                                : "Changes not saved yet…"}
+                          {saveState === "error" && (
+                            <button
+                              disabled={busy}
+                              onClick={() =>
+                                void progressSaver.current
+                                  ?.save()
+                                  .catch(() => {})
+                              }
+                            >
+                              Retry save
+                            </button>
+                          )}
+                        </p>
                         <div className="exam-actions">
                           <button
-                            disabled={index === 0}
-                            onClick={() => setIndex(index - 1)}
+                            disabled={busy || index === 0}
+                            onClick={() => changeProgress({ index: index - 1 })}
                           >
                             Previous
                           </button>
                           <button
-                            disabled={index === session.questions.length - 1}
-                            onClick={() => setIndex(index + 1)}
+                            disabled={
+                              busy || index === session.questions.length - 1
+                            }
+                            onClick={() => changeProgress({ index: index + 1 })}
                           >
                             Next
                           </button>
@@ -1417,6 +1495,7 @@ export default function Home() {
                       <div className="numbers" aria-label="Question navigator">
                         {session.questions.map((item, i) => (
                           <button
+                            disabled={busy}
                             aria-current={i === index ? "step" : undefined}
                             aria-label={`Go to question ${i + 1}${flags.includes(item.id) ? ", flagged" : ""}`}
                             className={
@@ -1425,7 +1504,7 @@ export default function Home() {
                               (answers[item.id]?.length ? " answered" : "")
                             }
                             key={item.id}
-                            onClick={() => setIndex(i)}
+                            onClick={() => changeProgress({ index: i })}
                           >
                             {i + 1}
                             {answers[item.id]?.length ? " ✓" : ""}

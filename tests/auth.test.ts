@@ -101,6 +101,48 @@ describe("cloud authorization contract with SDK mocks", () => {
     expect(await (await attempts.GET(req("guest"))).json()).toHaveLength(2);
     expect(await (await attempts.GET(req("guest-other"))).json()).toEqual([]);
   });
+  it.each(["guest", "alice"])(
+    "autosaves and restores progress only for its authenticated owner (%s)",
+    async (token) => {
+      const exams = await import("../apps/web/app/api/exams/route");
+      const sessions = await import("../apps/web/app/api/sessions/route");
+      const session = await (
+        await exams.POST(req(token, { mode: "timed" }))
+      ).json();
+      const progress = {
+        sessionId: session.id,
+        action: "save",
+        progressRevision: 0,
+        answers: { [session.questions[0].id]: ["A"] },
+        flags: [session.questions[1].id],
+        index: 7,
+      };
+      expect((await sessions.PATCH(req("other-user", progress))).status).toBe(
+        404,
+      );
+      expect((await sessions.PATCH(req(token, progress))).status).toBe(200);
+      const restored = await (await sessions.GET(req(token))).json();
+      expect(restored).toMatchObject({
+        answers: progress.answers,
+        flags: progress.flags,
+        index: 7,
+        paused: false,
+        deadline: session.deadline,
+      });
+      expect(
+        (await sessions.POST(req("other-user", { sessionId: session.id })))
+          .status,
+      ).toBe(404);
+      expect(
+        (
+          await (
+            await sessions.POST(req(token, { sessionId: session.id }))
+          ).json()
+        ).deadline,
+      ).toBe(session.deadline);
+      expect(state.verify).toHaveBeenCalledWith(token, true);
+    },
+  );
   it("denies guests admin access even with an erroneously assigned admin claim", async () => {
     const admin = await import("../apps/web/app/api/admin/route");
     for (const token of ["guest", "guest-admin"]) {
