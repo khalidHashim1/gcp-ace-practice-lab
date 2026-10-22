@@ -66,6 +66,7 @@ type ExamCatalogItem = {
   title: string;
   description: string;
   questionBankId: string;
+  totalQuestions: number;
   questionCount: number;
   durationMinutes: number;
   available: boolean;
@@ -445,6 +446,14 @@ export default function Home() {
     [attempts, bank, topics],
   );
   const coverage = bank.length ? Math.round((studied / bank.length) * 100) : 0;
+    const totalQuestions = [
+    ...new Map(
+      examCatalog.map((exam) => [
+        exam.questionBankId,
+        exam.totalQuestions,
+      ]),
+    ).values(),
+  ].reduce((total, count) => total + count, 0);
   const featuredExam = examCatalog.find((exam) => exam.available);
   const completedMocks = attempts.filter(
     (attempt) => attempt.mode === "timed",
@@ -909,7 +918,7 @@ export default function Home() {
                   <div className="metrics-grid">
                     <StatCard
                       label="Questions available"
-                      value={bank.length}
+                      value={totalQuestions}
                       note="Real-world cloud scenarios"
                       icon="book"
                     />
@@ -920,9 +929,9 @@ export default function Home() {
                       icon="check"
                     />
                     <StatCard
-                      label="Study coverage"
+                      label="Topic practice coverage"
                       value={`${coverage}%`}
-                      note={`${studied} of ${bank.length} explored`}
+                      note={`${studied} of ${bank.length} topic-practice questions explored`}
                       icon="grid"
                     />
                     <StatCard
